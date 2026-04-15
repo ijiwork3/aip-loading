@@ -44,11 +44,9 @@ body.dark .stage-sub   { color:rgba(200,192,228,0.70); }
 /* 다크: base-slide */
 body.dark .base-slide {
   background:linear-gradient(155deg,rgba(36,28,58,0.92) 0%,rgba(30,24,52,0.90) 50%,rgba(28,32,54,0.92) 100%);
-  border-color:rgba(255,255,255,0.08);
+  border:none;
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.06) inset,
-    inset 1px 0 0 rgba(255,255,255,0.04),
-    inset -1px 0 0 rgba(255,255,255,0.03),
+    inset 0 0 12px 2px rgba(60,44,88,0.65),
     0 20px 60px rgba(255,255,255,0.024);
 }
 body.dark .base-slide::before {
@@ -86,8 +84,8 @@ body.dark .img-fill {
 /* 다크: deck-card */
 body.dark .deck-card {
   background:linear-gradient(150deg,rgba(34,26,58,0.96),rgba(28,22,52,0.94));
-  border-color:rgba(255,255,255,0.07);
-  box-shadow:0 1px 0 rgba(255,255,255,0.05) inset,0 8px 24px rgba(255,255,255,0.02),inset 0 -1px 0 rgba(255,255,255,0.04),inset 1px 0 0 rgba(255,255,255,0.05),inset -1px 0 0 rgba(255,255,255,0.03);
+  border:none;
+  box-shadow:inset 0 0 12px 2px rgba(60,44,88,0.39),0 8px 24px rgba(255,255,255,0.02);
 }
 body.dark .deck-card::before { background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05) 30%,rgba(255,255,255,0.05) 70%,transparent); }
 body.dark .dc-hbar { box-shadow:none; }
@@ -97,7 +95,7 @@ body.dark .dc-col  { background:linear-gradient(150deg,rgba(80,60,168,0.20),rgba
 
 /* 다크: thumb */
 body.dark .thumb {
-  background:rgba(30,24,52,0.95);
+  background:rgba(34,26,58,0.95);
   border-color:rgba(255,255,255,0.08);
   box-shadow:0 4px 14px rgba(0,0,0,0.22),0 1px 0 rgba(255,255,255,0.05) inset;
 }
@@ -186,12 +184,12 @@ body {
   display:flex; align-items:center; justify-content:center;
   perspective:1000px; z-index:1;
   flex-shrink:0;
-  filter: hue-rotate(15deg) saturate(0.75);
+  filter: hue-rotate(8deg) saturate(0.82);
 }
 
 /* ── 하단 텍스트 영역 ── */
 .stage-caption {
-  margin-bottom:0px;
+  margin-bottom:0;
   text-align:center;
   pointer-events:none;
   z-index:50;
@@ -228,7 +226,9 @@ body {
     inset 1px 0 0 rgba(255,255,255,0.62),
     inset -1px 0 0 rgba(255,255,255,0.42),
     0 20px 60px rgba(108,82,198,0.10);
-  border:1px solid rgba(255,255,255,0.95);
+  border:none;
+  box-shadow:
+    0 20px 60px rgba(108,82,198,0.10);
   overflow:hidden;
   z-index:2;
 }
@@ -236,6 +236,16 @@ body {
   content:'';position:absolute;top:-50%;left:-60%;width:60%;height:200%;
   background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,0.12) 50%,transparent 100%);
   animation:glassShimmer 8s ease-in-out infinite;pointer-events:none;
+  z-index:1;
+}
+/* inset 링 — BC 위에 항상 표시 */
+.base-slide::after {
+  content:'';position:absolute;inset:0;
+  box-shadow:inset 0 0 12px 2px rgba(226,235,245,1.0);
+  border-radius:16px;pointer-events:none;z-index:100;
+}
+body.dark .base-slide::after {
+  box-shadow:inset 0 0 12px 2px rgba(60,44,88,0.65);
 }
 @keyframes glassShimmer{0%{transform:translateX(0);opacity:0}10%{opacity:1}40%{transform:translateX(800px);opacity:0.6}50%{transform:translateX(900px);opacity:0}100%{transform:translateX(900px);opacity:0}}
 
@@ -276,6 +286,9 @@ body {
   z-index:3;
   border-radius:0 0 16px 16px;
   overflow:hidden;
+
+}
+body.dark .bc-body {
 }
 
 /* BC 텍스트 영역 (좌) */
@@ -283,12 +296,12 @@ body {
   flex:1;
   padding:18px 16px 16px 18px;
   display:flex; flex-direction:column; gap:9px;
-  background:rgba(255,255,255,0.97);
+  background:transparent;
   position:relative;
 }
 .bc-text::after {
   content:'';position:absolute;bottom:0;left:0;right:0;height:28px;
-  background:linear-gradient(0deg,rgba(255,255,255,0.70),transparent);
+  background:transparent;
   pointer-events:none;
 }
 
@@ -375,8 +388,8 @@ body {
   background:linear-gradient(150deg,rgba(255,253,255,0.97),rgba(248,244,255,0.95));
   backdrop-filter:blur(36px) saturate(2.0) brightness(1.02);
   -webkit-backdrop-filter:blur(36px) saturate(2.0) brightness(1.02);
-  border-radius:14px;border:1px solid rgba(255,255,255,0.88);
-  box-shadow:0 1px 0 rgba(255,255,255,0.98) inset,0 8px 16px rgba(108,82,198,0.008),inset 0 -1px 0 rgba(108,82,198,0.04),inset 1px 0 0 rgba(255,255,255,0.55),inset -1px 0 0 rgba(255,255,255,0.35);
+  border-radius:14px;border:none;
+  box-shadow:inset 0 0 12px 2px rgba(226,235,245,0.60),0 8px 16px rgba(108,82,198,0.008);
   overflow:hidden;opacity:0;
   transform:translateZ(0px) translateY(0px);
   backface-visibility:hidden;transform-origin:bottom center;
@@ -426,7 +439,7 @@ body {
 .thumb {
   width:84px; height:58px;
   border-radius:7px;
-  background:rgba(255,255,255,0.97);
+  background:rgba(255,255,255,0.88);
   border:1px solid rgba(255,255,255,0.90);
   box-shadow:0 4px 14px rgba(108,82,198,0.06),0 1px 4px rgba(108,82,198,0.03),0 1px 0 rgba(255,255,255,0.98) inset;
   overflow:hidden; position:relative; flex-shrink:0;
@@ -453,7 +466,7 @@ body {
 .t-bc { flex:1; display:flex; overflow:hidden; min-height:0; }
 
 /* ── thumb0: 텍스트 좌 + 이미지 우 (메인BC와 동일) ── */
-.t0-text { flex:1;padding:5px 4px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:rgba(255,255,255,0.97); }
+.t0-text { flex:1;padding:5px 4px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
 .t0-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.16));flex-shrink:0; }
 .t0-img { width:26px;flex-shrink:0;background:linear-gradient(145deg,rgba(138,195,255,0.68),rgba(128,155,245,0.68));position:relative; }
 .t0-img::before { content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.22),transparent); }
@@ -461,23 +474,22 @@ body {
 /* ── thumb1: 상단 이미지 + 하단 텍스트 ── */
 .t1-img { height:28px;background:linear-gradient(135deg,rgba(168,212,255,0.55),rgba(178,162,255,0.44));position:relative;flex-shrink:0; }
 .t1-img::before { content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.20),transparent); }
-.t1-text { flex:1;padding:4px 5px;display:flex;flex-direction:column;gap:2.5px;background:rgba(255,255,255,0.97); }
+.t1-text { flex:1;padding:4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
 .t1-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.26),rgba(98,118,210,0.15));flex-shrink:0; }
 
 /* ── thumb2: 2컬럼 ── */
-.t2-cols { flex:1;display:flex;gap:0;background:rgba(255,255,255,0.97); }
+.t2-cols { flex:1;display:flex;gap:0;background:transparent; }
 .t2-col { flex:1;padding:5px 4px;display:flex;flex-direction:column;gap:2.5px; }
 .t2-col:first-child { }
 .t2-col-img { border-radius:4px;background:linear-gradient(145deg,rgba(138,195,255,0.55),rgba(155,145,248,0.45));flex:1; }
 .t2-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.24),rgba(98,118,210,0.13));flex-shrink:0; }
 
 /* ── thumb3: 큰 이미지 전면 ── */
-.t3-bigimg { flex:1;background:rgba(168,195,255,0.52);position:relative; }
-.t3-overlay { position:absolute;bottom:0;left:0;right:0;padding:4px 5px;background:rgba(255,255,255,0.96);display:flex;flex-direction:column;gap:2px; }
+.t3-bigimg { flex:1;background:rgba(168,195,255,0.52);border-radius:5px; }
 .t3-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.16));flex-shrink:0; }
 
 /* ── thumb4: 텍스트 위주 ── */
-.t4-text { flex:1;padding:5px 5px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:rgba(255,255,255,0.97); }
+.t4-text { flex:1;padding:5px 5px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
 .t4-title { height:3px;border-radius:1.5px;background:linear-gradient(90deg,rgba(108,68,205,0.44),rgba(82,122,218,0.30));flex-shrink:0; }
 .t4-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.22),rgba(98,118,210,0.13));flex-shrink:0; }
 .t4-divider { height:1px;background:linear-gradient(90deg,transparent,rgba(148,108,228,0.14),transparent);flex-shrink:0; }
@@ -492,7 +504,7 @@ body {
   <span id="toggleLabel">라이트</span>
 </button>
 
-<div style="display:flex;flex-direction:column;align-items:center;transform:translateY(-5vh);">
+<div style="display:flex;flex-direction:column;align-items:center;transform:translateY(-6.25vh);">
 <!-- 단계 캡션 -->
 <div class="stage-caption" id="stageCaption">
   <div class="stage-title" id="stageTitle">내용에 맞는 레이아웃을 고르고 있어요</div>
@@ -583,12 +595,11 @@ body {
     <div class="thumb" id="thumb3">
       <div style="display:flex;flex-direction:column;height:100%">
         <div class="t-mc"><div class="t-mc-gem"></div><div class="t-mc-bar"></div></div>
-        <div class="t-bc" style="padding:3px 4px 3px;">
-          <div class="t3-bigimg" style="flex:1;border-radius:5px;overflow:hidden;">
-            <div class="t3-overlay">
-              <div class="t3-line" style="height:2.5px;width:70%"></div>
-              <div class="t3-line" style="height:2px;width:52%"></div>
-            </div>
+        <div class="t-bc" style="padding:3px 4px 4px;flex-direction:column;gap:3px;">
+          <div class="t3-bigimg" style="flex:0 0 22px;border-radius:4px;"></div>
+          <div style="display:flex;flex-direction:column;gap:2px;flex-shrink:0;">
+            <div class="t3-line" style="height:2.5px;width:70%"></div>
+            <div class="t3-line" style="height:2px;width:52%"></div>
           </div>
         </div>
       </div>
@@ -802,7 +813,7 @@ const bcLayouts = [
     html: `
       <div class="bc-cols" style="flex:1;display:flex;gap:0;overflow:hidden;">
         <div style="flex:1;padding:12px 10px 12px 14px;display:flex;flex-direction:column;gap:8px;
-          background:rgba(255,255,255,0.97);">
+          background:transparent;">
           <div class="bc-col-img" style="flex:0.9;border-radius:8px;
             background:linear-gradient(145deg,rgba(138,195,255,0.60),rgba(155,145,248,0.50));
             position:relative;overflow:hidden;">
@@ -812,7 +823,7 @@ const bcLayouts = [
           <div class="bc-col-l2" style="height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(118,82,210,0.20),rgba(98,118,210,0.12));width:0%"></div>
         </div>
         <div style="flex:1;padding:12px 14px 12px 10px;display:flex;flex-direction:column;gap:8px;
-          background:rgba(255,255,255,0.97);">
+          background:transparent;">
           <div class="bc-col-img2" style="flex:0.9;border-radius:8px;
             background:linear-gradient(145deg,rgba(168,195,255,0.55),rgba(128,175,248,0.46));
             position:relative;overflow:hidden;">
@@ -838,23 +849,18 @@ const bcLayouts = [
   {
     thumbIdx: 3,
     html: `
-      <div style="position:absolute;inset:0;
-        background:rgba(255,255,255,0.97);">
-        <div style="position:absolute;inset:12px 14px;border-radius:10px;overflow:hidden;
-          background:rgba(168,195,255,0.52);">
-          <div style="position:absolute;bottom:0;left:0;right:0;padding:16px 14px 14px;
-            background:rgba(255,255,255,0.97);">
-            <div class="bc-big-l1" style="height:7px;border-radius:3px;
-              background:linear-gradient(90deg,rgba(108,68,205,0.44),rgba(82,122,218,0.30));
-              width:0%;margin-bottom:10px"></div>
-            <div class="bc-big-l2" style="height:6px;border-radius:3px;
-              background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.18));
-              width:0%;margin-bottom:8px"></div>
-            <div class="bc-big-l3" style="height:5px;border-radius:3px;
-              background:linear-gradient(90deg,rgba(118,82,210,0.20),rgba(98,118,210,0.12));
-              width:0%"></div>
-          </div>
-        </div>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:12px 14px 14px;">
+        <div style="flex:0 0 110px;border-radius:10px;overflow:hidden;
+          background:rgba(168,195,255,0.52);margin-bottom:12px;"></div>
+        <div class="bc-big-l1" style="height:7px;border-radius:3px;
+          background:linear-gradient(90deg,rgba(108,68,205,0.44),rgba(82,122,218,0.30));
+          width:0%;margin-bottom:10px"></div>
+        <div class="bc-big-l2" style="height:6px;border-radius:3px;
+          background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.18));
+          width:0%;margin-bottom:8px"></div>
+        <div class="bc-big-l3" style="height:5px;border-radius:3px;
+          background:linear-gradient(90deg,rgba(118,82,210,0.20),rgba(98,118,210,0.12));
+          width:0%"></div>
       </div>`,
     animate(t) {
       const cls=['bc-big-l1','bc-big-l2','bc-big-l3'];
@@ -871,7 +877,7 @@ const bcLayouts = [
     thumbIdx: 4,
     html: `
       <div style="position:absolute;inset:0;display:flex;
-        background:rgba(255,255,255,0.97);">
+        background:transparent;">
         <div style="flex:1;padding:18px 14px 16px 18px;display:flex;flex-direction:column;gap:9px;">
           <div class="bc-txt-l0" style="height:7px;border-radius:3px;width:0%;background:linear-gradient(90deg,rgba(108,68,205,0.44),rgba(82,122,218,0.30));"></div>
           <div class="bc-txt-l1" style="height:6px;border-radius:3px;width:0%;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.18));"></div>
@@ -1099,7 +1105,7 @@ s2Layer.style.cssText = `
   border-radius:16px;overflow:hidden;
   background:linear-gradient(155deg,rgba(255,254,255,0.97),rgba(251,248,255,0.95),rgba(249,253,255,0.96));
   box-shadow:0 1px 0 rgba(255,255,255,0.99) inset,0 20px 60px rgba(108,82,198,0.10);
-  border:1px solid rgba(255,255,255,0.95);
+  border:4px solid rgba(255,255,255,0.30);
   opacity:0;z-index:10;pointer-events:none;
   backdrop-filter:blur(40px) saturate(2.1);
   -webkit-backdrop-filter:blur(40px) saturate(2.1);
@@ -1111,7 +1117,7 @@ document.getElementById('scene').appendChild(s2Layer);
 function getS2McHtml(){
   const bg = isDark
     ? 'linear-gradient(90deg,rgba(50,38,88,0.95),rgba(40,48,88,0.90))'
-    : 'linear-gradient(90deg,rgba(218,208,255,0.85),rgba(200,220,255,0.75))';
+    : 'linear-gradient(90deg,rgba(218,208,255,0.40),rgba(200,220,255,0.30))';
   return `
   <div style="position:absolute;top:0;left:0;right:0;height:24px;
     display:flex;align-items:center;padding:0 14px;gap:6px;
@@ -1179,8 +1185,8 @@ function s2SetupCycle(idx){
   s2Layer.innerHTML='';
   // s2Layer 기본 스타일 복원
   s2Layer.style.background='linear-gradient(155deg,rgba(254,252,255,0.97),rgba(248,244,255,0.94),rgba(244,249,255,0.95))';
-  s2Layer.style.boxShadow='0 1px 0 rgba(255,255,255,0.99) inset,0 20px 60px rgba(108,82,198,0.10)';
-  s2Layer.style.border='1px solid rgba(255,255,255,0.95)';
+  s2Layer.style.boxShadow='inset 0 0 12px 2px rgba(226,235,245,1.0),0 20px 60px rgba(108,82,198,0.10)';
+  s2Layer.style.border='none';
   s2Layer.style.backdropFilter='blur(40px) saturate(2.1)';
   s2Layer.style.webkitBackdropFilter='blur(40px) saturate(2.1)';
 
@@ -1466,14 +1472,14 @@ function _startS2at(cycleIdx){
 let isDark = false;
 
 const DARK_S2 = 'linear-gradient(155deg,rgba(34,26,58,0.96),rgba(28,22,52,0.94),rgba(26,30,56,0.95))';
-const DARK_S2_SHADOW = '0 1px 0 rgba(255,255,255,0.05) inset,0 20px 60px rgba(255,255,255,0.024)';
+const DARK_S2_SHADOW = 'inset 0 0 12px 2px rgba(60,44,88,0.65),0 20px 60px rgba(255,255,255,0.024)';
 const LIGHT_S2 = 'linear-gradient(155deg,rgba(255,254,255,0.97),rgba(251,248,255,0.95),rgba(249,253,255,0.96))';
-const LIGHT_S2_SHADOW = '0 1px 0 rgba(255,255,255,0.99) inset,0 20px 60px rgba(108,82,198,0.10)';
+const LIGHT_S2_SHADOW = 'inset 0 0 12px 2px rgba(226,235,245,1.0),0 20px 60px rgba(108,82,198,0.10)';
 
 function applyDarkS2(){
   s2Layer.style.background = isDark ? DARK_S2 : LIGHT_S2;
   s2Layer.style.boxShadow  = isDark ? DARK_S2_SHADOW : LIGHT_S2_SHADOW;
-  s2Layer.style.borderColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.95)';
+  s2Layer.style.border = 'none';
 }
 
 const origS2Setup = s2SetupCycle;
