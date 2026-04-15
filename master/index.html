@@ -8,6 +8,145 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 
+/* ── 라이트/다크 토글 버튼 ── */
+#themeToggle {
+  position:fixed; top:20px; left:20px; z-index:200;
+  display:flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,0.72); backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.90);
+  border-radius:40px; padding:7px 14px;
+  box-shadow:0 4px 16px rgba(108,82,198,0.10);
+  cursor:pointer; font-family:'Pretendard Variable','Pretendard',-apple-system,sans-serif;
+  font-size:12px; font-weight:600; color:rgba(60,50,100,0.70);
+  transition:background 0.3s, color 0.3s, border-color 0.3s;
+  user-select:none;
+}
+#themeToggle .toggle-icon { font-size:14px; line-height:1; }
+
+/* 다크모드 토글 버튼 */
+body.dark #themeToggle {
+  background:rgba(30,24,50,0.80);
+  border-color:rgba(255,255,255,0.10);
+  color:rgba(200,190,230,0.80);
+  box-shadow:0 4px 16px rgba(0,0,0,0.30);
+}
+
+/* ── 다크모드 전체 ── */
+body.dark {
+  background:url('BG-dark.png') center center / cover no-repeat, #1a1628;
+}
+
+/* 다크: 타이틀/서브 */
+body.dark .stage-title { color:#E8E4F4; }
+body.dark .stage-sub   { color:rgba(200,192,228,0.70); }
+
+/* 다크: base-slide */
+body.dark .base-slide {
+  background:linear-gradient(155deg,rgba(36,28,58,0.92) 0%,rgba(30,24,52,0.90) 50%,rgba(28,32,54,0.92) 100%);
+  border-color:rgba(255,255,255,0.08);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.06) inset,
+    inset 1px 0 0 rgba(255,255,255,0.04),
+    inset -1px 0 0 rgba(255,255,255,0.03),
+    0 20px 60px rgba(255,255,255,0.024);
+}
+body.dark .base-slide::before {
+  background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,0.04) 50%,transparent 100%);
+}
+
+/* 다크: mc */
+body.dark .mc-gem { background:rgba(168,138,248,0.55); box-shadow:0 0 5px rgba(168,138,248,0.30); }
+body.dark .mc-bar { background:linear-gradient(90deg,rgba(148,108,238,0.60),rgba(108,158,248,0.44)); }
+body.dark .mc-dots span { background:rgba(168,138,248,0.22); }
+body.dark .mc-dots span:nth-child(2){ background:rgba(168,138,248,0.14); }
+body.dark .mc-dots span:nth-child(3){ background:rgba(168,138,248,0.08); }
+
+/* 다크: trl */
+body.dark .trl { background:linear-gradient(90deg,rgba(148,108,238,0.35),rgba(118,138,238,0.22)); }
+body.dark #trl0 { background:linear-gradient(90deg,rgba(138,98,228,0.50),rgba(108,148,238,0.34)); }
+body.dark #trl4 { background:linear-gradient(90deg,rgba(148,108,238,0.22),rgba(118,138,238,0.12)); }
+body.dark .trl::after { background:linear-gradient(90deg,transparent,rgba(255,255,255,0.10),transparent); }
+
+/* 다크: bc-text */
+body.dark .bc-text { background:rgba(28,22,50,0.95); }
+body.dark .bc-text::after { background:linear-gradient(0deg,rgba(28,22,50,0.70),transparent); }
+
+/* 다크: bc-image */
+body.dark .bc-image {
+  background:linear-gradient(145deg,rgba(80,60,148,0.70) 0%,rgba(60,80,168,0.75) 30%,rgba(70,60,168,0.68) 65%,rgba(88,60,158,0.62) 100%);
+}
+body.dark .bc-image::before { background:linear-gradient(180deg,rgba(255,255,255,0.10) 0%,transparent 100%); }
+body.dark .bc-image::after  { background:linear-gradient(180deg,transparent,rgba(255,255,255,0.18) 30%,rgba(255,255,255,0.18) 70%,transparent); }
+body.dark .img-fill {
+  background:linear-gradient(135deg,rgba(80,110,200,0.45),rgba(60,90,180,0.55),rgba(70,100,190,0.45));
+  border-color:rgba(255,255,255,0.15);
+}
+
+/* 다크: deck-card */
+body.dark .deck-card {
+  background:linear-gradient(150deg,rgba(34,26,58,0.96),rgba(28,22,52,0.94));
+  border-color:rgba(255,255,255,0.07);
+  box-shadow:0 1px 0 rgba(255,255,255,0.05) inset,0 8px 24px rgba(255,255,255,0.02),inset 0 -1px 0 rgba(255,255,255,0.04),inset 1px 0 0 rgba(255,255,255,0.05),inset -1px 0 0 rgba(255,255,255,0.03);
+}
+body.dark .deck-card::before { background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05) 30%,rgba(255,255,255,0.05) 70%,transparent); }
+body.dark .dc-hbar { box-shadow:none; }
+body.dark .dc-line { background:linear-gradient(90deg,rgba(148,118,238,0.24),rgba(118,138,238,0.15)); }
+body.dark .dc-img  { background:linear-gradient(148deg,rgba(80,55,168,0.50),rgba(60,90,178,0.44)); box-shadow:0 1px 0 rgba(255,255,255,0.06) inset; }
+body.dark .dc-col  { background:linear-gradient(150deg,rgba(80,60,168,0.20),rgba(60,90,178,0.14)); box-shadow:0 1px 0 rgba(255,255,255,0.06) inset; }
+
+/* 다크: thumb */
+body.dark .thumb {
+  background:rgba(30,24,52,0.95);
+  border-color:rgba(255,255,255,0.08);
+  box-shadow:0 4px 14px rgba(0,0,0,0.22),0 1px 0 rgba(255,255,255,0.05) inset;
+}
+body.dark .thumb.active { box-shadow:0 4px 14px rgba(0,0,0,0.28),0 1px 0 rgba(255,255,255,0.05) inset; }
+body.dark .t-mc { background:linear-gradient(90deg,rgba(60,44,108,0.80),rgba(44,60,108,0.72)); }
+body.dark .t-mc-gem { background:rgba(168,138,248,0.45); }
+body.dark .t-mc-bar { background:linear-gradient(90deg,rgba(148,108,238,0.55),rgba(108,148,248,0.40)); }
+body.dark .t0-line,.t1-line,.t2-line,.t3-line,.t4-line,.t4-title { opacity:0.6; filter:invert(1) hue-rotate(180deg); }
+body.dark .t0-img { background:linear-gradient(145deg,rgba(60,100,178,0.68),rgba(70,60,168,0.68)); }
+body.dark .t1-img { background:linear-gradient(135deg,rgba(60,90,178,0.55),rgba(80,60,168,0.44)); }
+body.dark .t2-col-img { background:linear-gradient(145deg,rgba(60,100,178,0.55),rgba(80,60,168,0.45)); }
+body.dark .t3-bigimg { background:rgba(50,70,168,0.52); }
+body.dark .t3-overlay { background:rgba(22,16,44,0.96); }
+
+/* 다크: tip 이미지 영역 */
+body.dark #tipImg { filter:invert(1) hue-rotate(180deg) brightness(0.75); }
+
+/* 다크: bc-text 내부 흰 배경 */
+body.dark .bc-text { background:rgba(34,26,58,0.97); }
+body.dark .bc-text::after { background:linear-gradient(0deg,rgba(18,14,36,0.70),transparent); }
+
+/* 다크: bcLayouts 내부 흰 배경 (인라인 style 대응) */
+body.dark .bc-body [style*="rgba(255,255,255,0.97)"],
+body.dark .bc-body [style*="rgba(255,255,255,0.96)"] {
+  background:rgba(34,26,58,0.97) !important;
+}
+
+/* 다크: bcLayouts 컬럼/오버레이 */
+body.dark .bc-cols > div,
+body.dark .bc-big-l1,
+body.dark .bc-big-l2,
+body.dark .bc-big-l3 { opacity:0.9; }
+
+/* 다크: s2Layer 내부 흰 배경 */
+body.dark #s2Layer [style*="rgba(255,255,255,0.97)"],
+body.dark #s2Layer [style*="rgba(255,255,255,0.96)"],
+body.dark #s2Layer [style*="background:rgba(255,255,255"] {
+  background:rgba(34,26,58,0.97) !important;
+}
+
+/* 다크: thumb 내부 흰 배경 */
+body.dark .t0-text,
+body.dark .t1-text,
+body.dark .t2-cols,
+body.dark .t3-overlay,
+body.dark .t4-text { background:rgba(34,26,58,0.97) !important; }
+
+/* 다크: s2Layer는 JS에서 처리 */
+
 .snbtn {
   font-size:11px;font-weight:600;letter-spacing:0.02em;
   color:rgba(108,82,198,0.55);
@@ -347,6 +486,12 @@ body {
 <body>
 
 
+<!-- 라이트/다크 토글 -->
+<button id="themeToggle" onclick="toggleTheme()">
+  <span class="toggle-icon" id="toggleIcon">☀️</span>
+  <span id="toggleLabel">라이트</span>
+</button>
+
 <div style="display:flex;flex-direction:column;align-items:center;transform:translateY(-5vh);">
 <!-- 단계 캡션 -->
 <div class="stage-caption" id="stageCaption">
@@ -543,7 +688,7 @@ body {
 
 <!-- 하단 tip 이미지 -->
 <div style="position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;align-items:flex-end;padding-bottom:60px;pointer-events:none;z-index:50;">
-  <img src="Frame 6.png" style="width:760px;" alt="">
+  <img id="tipImg" src="Frame 6.png" style="width:760px;" alt="">
 </div>
 
 
@@ -963,20 +1108,25 @@ document.getElementById('scene').appendChild(s2Layer);
 
 // ── Stage2 슬라이드 빌드: bcLayouts[idx] HTML을 그대로 재사용 ──
 // MC 헤더(24px) + BC 콘텐츠를 s2Layer에 통합
-const S2_MC_HTML = `
+function getS2McHtml(){
+  const bg = isDark
+    ? 'linear-gradient(90deg,rgba(50,38,88,0.95),rgba(40,48,88,0.90))'
+    : 'linear-gradient(90deg,rgba(218,208,255,0.85),rgba(200,220,255,0.75))';
+  return `
   <div style="position:absolute;top:0;left:0;right:0;height:24px;
     display:flex;align-items:center;padding:0 14px;gap:6px;
-    background:linear-gradient(90deg,rgba(218,208,255,0.85),rgba(200,220,255,0.75));">
+    background:${bg};">
     <div style="width:5px;height:5px;background:rgba(138,105,218,0.50);transform:rotate(45deg);flex-shrink:0;"></div>
     <div style="flex:1;height:5px;border-radius:2.5px;
       background:linear-gradient(90deg,rgba(122,82,215,0.55),rgba(82,132,228,0.42));"></div>
   </div>`;
+}
 
 function s2BuildLayout(container, bcIdx){
   // bcLayouts[bcIdx]의 HTML을 MC 헤더 아래에 배치
   const bcHtml = bcLayouts[bcIdx].html;
   const isBlock = (bcIdx===1||bcIdx===2);
-  container.innerHTML = S2_MC_HTML + `
+  container.innerHTML = getS2McHtml() + `
     <div style="position:absolute;top:24px;left:0;right:0;bottom:0;
       display:${isBlock?'block':'flex'};overflow:hidden;">
       ${bcHtml}
@@ -1311,6 +1461,56 @@ function _startS2at(cycleIdx){
   raf2(mainLoop);
 }
 
+
+// ── 다크모드 토글 ──
+let isDark = false;
+
+const DARK_S2 = 'linear-gradient(155deg,rgba(34,26,58,0.96),rgba(28,22,52,0.94),rgba(26,30,56,0.95))';
+const DARK_S2_SHADOW = '0 1px 0 rgba(255,255,255,0.05) inset,0 20px 60px rgba(255,255,255,0.024)';
+const LIGHT_S2 = 'linear-gradient(155deg,rgba(255,254,255,0.97),rgba(251,248,255,0.95),rgba(249,253,255,0.96))';
+const LIGHT_S2_SHADOW = '0 1px 0 rgba(255,255,255,0.99) inset,0 20px 60px rgba(108,82,198,0.10)';
+
+function applyDarkS2(){
+  s2Layer.style.background = isDark ? DARK_S2 : LIGHT_S2;
+  s2Layer.style.boxShadow  = isDark ? DARK_S2_SHADOW : LIGHT_S2_SHADOW;
+  s2Layer.style.borderColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.95)';
+}
+
+const origS2Setup = s2SetupCycle;
+function s2SetupCycleWrapped(idx){
+  origS2Setup(idx);
+  applyDarkS2();
+}
+
+const DARK_BG  = 'rgba(34,26,58,0.97)';
+const LIGHT_BG = 'rgba(255,255,255,0.97)';
+
+function applyDarkBCInner(container){
+  if(!container) return;
+  container.querySelectorAll('[style]').forEach(el=>{
+    const s = el.style.background || el.style.backgroundColor || '';
+    if(s.includes('255,255,255')){
+      el.style.background = isDark ? DARK_BG : LIGHT_BG;
+    }
+  });
+}
+
+function toggleTheme(){
+  isDark = !isDark;
+  document.body.classList.toggle('dark', isDark);
+  document.getElementById('toggleIcon').textContent  = isDark ? '🌙' : '☀️';
+  document.getElementById('toggleLabel').textContent = isDark ? '다크' : '라이트';
+  applyDarkS2();
+  applyDarkBCInner(bcBody);
+  applyDarkBCInner(s2Layer);
+}
+
+// setBCLayout/s2SetupCycle 이후 다크 자동 적용
+const _origSetBCLayout = setBCLayout;
+setBCLayout = function(idx){ _origSetBCLayout(idx); if(isDark) applyDarkBCInner(bcBody); };
+
+const _origS2Setup = s2SetupCycle;
+s2SetupCycle = function(idx){ _origS2Setup(idx); applyDarkS2(); applyDarkBCInner(s2Layer); };
 
 // kick-off
 resetAll();
