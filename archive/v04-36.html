@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>v04-22</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  width:100vw; height:100vh; overflow:hidden;
+  background:linear-gradient(158deg,#E8DFFB 0%,#DDE9FB 46%,#D0E7F9 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+  position:relative;
+}
+
+.bg-orb { position:fixed; border-radius:50%; pointer-events:none; }
+.orb1 { width:580px;height:580px;background:radial-gradient(circle at 38% 38%,rgba(178,138,255,0.44) 0%,transparent 60%);filter:blur(90px);opacity:0.74;top:-150px;left:-130px;animation:orb1 16s ease-in-out infinite alternate; }
+.orb2 { width:480px;height:480px;background:radial-gradient(circle at 55% 55%,rgba(98,195,255,0.40) 0%,transparent 62%);filter:blur(94px);opacity:0.70;bottom:-120px;right:-100px;animation:orb2 20s ease-in-out infinite alternate; }
+.orb3 { width:320px;height:320px;background:radial-gradient(circle at 50% 50%,rgba(195,165,255,0.36) 0%,transparent 62%);filter:blur(74px);opacity:0.64;top:36%;left:60%;animation:orb3 13s ease-in-out infinite alternate; }
+.orb4 { width:240px;height:240px;background:radial-gradient(circle at 50% 50%,rgba(148,205,255,0.34) 0%,transparent 62%);filter:blur(64px);opacity:0.60;top:8%;right:12%;animation:orb4 9s ease-in-out infinite alternate; }
+.orb5 { width:200px;height:200px;background:radial-gradient(circle at 50% 50%,rgba(255,178,198,0.22) 0%,transparent 62%);filter:blur(80px);opacity:0.48;bottom:5%;left:38%;animation:orb5 11s ease-in-out infinite alternate; }
+@keyframes orb1{0%{transform:translate(0,0)scale(1)}100%{transform:translate(65px,45px)scale(1.18)}}
+@keyframes orb2{0%{transform:translate(0,0)scale(1)}100%{transform:translate(-55px,-38px)scale(1.12)}}
+@keyframes orb3{0%{transform:translate(0,0)scale(1)}100%{transform:translate(-42px,32px)scale(0.88)}}
+@keyframes orb4{0%{transform:translate(0,0)scale(1)}100%{transform:translate(20px,-25px)scale(1.08)}}
+@keyframes orb5{0%{transform:translate(0,0)scale(1)}100%{transform:translate(-30px,20px)scale(1.15)}}
+
+.scene {
+  position:relative; width:560px; height:500px;
+  display:flex; align-items:center; justify-content:center;
+  perspective:1000px; z-index:1;
+}
+
+/* ────────────────────────────────
+   메인 슬라이드 컨테이너 360×240
+   MC(24px) + BC(216px) 수직 배열
+──────────────────────────────── */
+.base-slide {
+  position:absolute;
+  width:360px; height:240px;
+  top:calc(50% - 120px); left:calc(50% - 180px);
+  background:linear-gradient(155deg,rgba(254,252,255,0.93) 0%,rgba(248,244,255,0.90) 50%,rgba(244,249,255,0.92) 100%);
+  backdrop-filter:blur(40px) saturate(2.1) brightness(1.04);
+  -webkit-backdrop-filter:blur(40px) saturate(2.1) brightness(1.04);
+  border-radius:16px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.99) inset,
+    inset 1px 0 0 rgba(255,255,255,0.62),
+    inset -1px 0 0 rgba(255,255,255,0.42),
+    0 60px 120px rgba(108,82,198,0.18),
+    0 24px 56px rgba(92,112,198,0.14),
+    0 8px 20px rgba(108,82,198,0.10);
+  border:1px solid rgba(255,255,255,0.95);
+  overflow:hidden;
+  z-index:2;
+}
+.base-slide::before {
+  content:'';position:absolute;top:-50%;left:-60%;width:60%;height:200%;
+  background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,0.12) 50%,transparent 100%);
+  animation:glassShimmer 8s ease-in-out infinite;pointer-events:none;
+}
+@keyframes glassShimmer{0%{transform:translateX(0);opacity:0}10%{opacity:1}40%{transform:translateX(800px);opacity:0.6}50%{transform:translateX(900px);opacity:0}100%{transform:translateX(900px);opacity:0}}
+
+/* ── MC 영역: 슬라이드 상단 24px 라인 ── */
+.mc-header {
+  position:absolute;
+  width:360px; height:24px;
+  top:calc(50% - 120px); left:calc(50% - 180px);
+  display:flex; align-items:center;
+  padding:0 14px; gap:6px;
+  z-index:4;
+  /* 하단 구분선 */
+  border-bottom:1px solid rgba(148,108,228,0.14);
+}
+.mc-gem {
+  width:5px; height:5px;
+  background:rgba(138,105,218,0.48);
+  transform:rotate(45deg);
+  flex-shrink:0;
+  box-shadow:0 0 5px rgba(138,105,218,0.28);
+}
+.mc-bar {
+  flex:1; height:3px; border-radius:2px;
+  background:linear-gradient(90deg,rgba(122,82,215,0.55),rgba(82,132,228,0.42));
+  width:0%; position:relative; overflow:hidden;
+}
+.mc-bar.filled { animation:barPulse 2.8s ease-in-out infinite; }
+@keyframes barPulse{
+  0%,100%{box-shadow:0 0 3px 1px rgba(122,82,215,0.20)}
+  50%    {box-shadow:0 0 7px 2px rgba(122,82,215,0.32)}
+}
+.mc-bar::before {
+  content:'';position:absolute;top:0;left:-50%;bottom:0;width:50%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.45),transparent);
+  animation:mcShimmer 3s ease-in-out infinite;
+}
+@keyframes mcShimmer{0%{left:-50%}100%{left:130%}}
+.mc-dots { display:flex; gap:3px; flex-shrink:0; }
+.mc-dots span { width:3px; height:3px; border-radius:50%; background:rgba(138,105,218,0.30); }
+.mc-dots span:nth-child(2){ background:rgba(138,105,218,0.20); }
+.mc-dots span:nth-child(3){ background:rgba(138,105,218,0.12); }
+
+/* ── BC 영역: MC 아래 텍스트+이미지 ── */
+/* 이미지 기준: 좌=텍스트 블록(파란), 우=이미지 영역(파란), 안에 초록 콘텐츠 */
+.bc-body {
+  position:absolute;
+  width:360px; height:216px;
+  top:calc(50% - 120px + 24px); left:calc(50% - 180px);
+  display:none;
+  z-index:3;
+  border-radius:0 0 16px 16px;
+  overflow:hidden;
+}
+
+/* BC 텍스트 영역 (좌) */
+.bc-text {
+  flex:1;
+  padding:18px 16px 16px 18px;
+  display:flex; flex-direction:column; gap:9px;
+  background:linear-gradient(160deg,rgba(250,246,255,0.97) 0%,rgba(240,233,255,0.93) 100%);
+  position:relative;
+}
+.bc-text::after {
+  content:'';position:absolute;bottom:0;left:0;right:0;height:28px;
+  background:linear-gradient(0deg,rgba(240,233,255,0.70),transparent);
+  pointer-events:none;
+}
+
+/* trl 텍스트 라인 */
+.trl {
+  height:6px; border-radius:3px;
+  background:linear-gradient(90deg,rgba(118,82,210,0.30),rgba(98,118,210,0.18));
+  width:0%; position:relative; overflow:hidden; flex-shrink:0;
+}
+#trl0 { height:7px; background:linear-gradient(90deg,rgba(108,68,205,0.44),rgba(82,122,218,0.30)); }
+#trl4 { height:5px; background:linear-gradient(90deg,rgba(118,82,210,0.18),rgba(98,118,210,0.10)); }
+.trl::after {
+  content:'';position:absolute;top:0;left:-60%;bottom:0;width:60%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.75),transparent);
+  animation:shimmer 2.6s ease-in-out infinite;
+}
+#trl0::after{animation-delay:0s}#trl1::after{animation-delay:0.18s}
+#trl2::after{animation-delay:0.36s}#trl3::after{animation-delay:0.54s}#trl4::after{animation-delay:0.72s}
+@keyframes shimmer{0%{left:-60%}100%{left:110%}}
+
+/* BC 이미지 영역 (우) */
+.bc-image {
+  width:120px; flex-shrink:0;
+  background:linear-gradient(145deg,rgba(138,195,255,0.68) 0%,rgba(108,175,252,0.75) 30%,rgba(128,155,245,0.68) 65%,rgba(155,145,248,0.62) 100%);
+  background-size:200% 200%;
+  animation:imgBgAnim 6s ease-in-out infinite;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+}
+@keyframes imgBgAnim{0%{background-position:0% 0%}50%{background-position:100% 100%}100%{background-position:0% 0%}}
+.bc-image::before {
+  content:'';position:absolute;top:0;left:0;right:0;height:45%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.26) 0%,transparent 100%);
+  pointer-events:none;z-index:1;
+}
+/* 좌측 구분선 */
+.bc-image::after {
+  content:'';position:absolute;top:10px;bottom:10px;left:0;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,0.55) 30%,rgba(255,255,255,0.55) 70%,transparent);
+  z-index:2;
+}
+.img-fill {
+  width:72%; height:65%;
+  background:linear-gradient(135deg,rgba(200,230,255,0.55) 0%,rgba(168,210,255,0.68) 50%,rgba(185,220,255,0.55) 100%);
+  background-size:200% 200%;
+  animation:imgAnim 3.5s ease-in-out infinite;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;border-radius:8px;
+  border:1px solid rgba(255,255,255,0.68);
+  box-shadow:0 3px 10px rgba(82,128,228,0.22),0 1px 0 rgba(255,255,255,0.80) inset;
+  z-index:2;position:relative;
+}
+@keyframes imgAnim{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.img-fill::after {
+  content:'';position:absolute;top:0;left:-70%;width:70%;bottom:0;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,0.28),transparent);
+  animation:imgShimmer 4.2s ease-in-out infinite;border-radius:8px;pointer-events:none;
+}
+@keyframes imgShimmer{0%{left:-70%;opacity:0}15%{opacity:1}55%{left:110%;opacity:0.7}60%,100%{left:110%;opacity:0}}
+.img-icon {
+  width:24px;height:18px;border:1.5px solid rgba(255,255,255,0.65);border-radius:4px;
+  position:relative;background:rgba(255,255,255,0.28);
+}
+.img-icon::before {
+  content:'';position:absolute;top:3px;left:2px;width:5px;height:5px;
+  border-radius:50%;background:rgba(255,255,255,0.72);
+}
+.img-icon::after {
+  content:'';position:absolute;bottom:0;left:0;right:0;height:8px;
+  background:linear-gradient(135deg,rgba(168,215,255,0.60),rgba(138,188,245,0.70));
+  border-radius:0 0 3px 3px;
+}
+
+/* ────────────────────────────────
+   덱 카드들 (v04-19 구조)
+──────────────────────────────── */
+.deck-container {
+  position:absolute;width:320px;height:214px;
+  left:calc(50% - 160px);top:calc(50% - 107px);
+  transform-style:preserve-3d;opacity:0;
+}
+.deck-card {
+  position:absolute;width:320px;height:214px;
+  background:linear-gradient(150deg,rgba(252,249,255,0.95),rgba(244,238,255,0.92));
+  backdrop-filter:blur(36px) saturate(2.0) brightness(1.02);
+  -webkit-backdrop-filter:blur(36px) saturate(2.0) brightness(1.02);
+  border-radius:14px;border:1px solid rgba(255,255,255,0.88);
+  box-shadow:0 1px 0 rgba(255,255,255,0.98) inset,0 12px 32px rgba(108,82,198,0.10),0 6px 14px rgba(92,112,198,0.07),0 2px 4px rgba(108,82,198,0.04),inset 0 -1px 0 rgba(108,82,198,0.04),inset 1px 0 0 rgba(255,255,255,0.55),inset -1px 0 0 rgba(255,255,255,0.35);
+  overflow:hidden;opacity:0;
+  transform:translateZ(0px) translateY(0px);
+  backface-visibility:hidden;transform-origin:bottom center;
+}
+.deck-card::before {
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.90) 30%,rgba(255,255,255,0.90) 70%,transparent);
+}
+.dc-body { padding:18px 20px;width:100%;height:100%;display:flex;flex-direction:column; }
+.dc-hbar {
+  height:8px;border-radius:5px;
+  background:linear-gradient(90deg,rgba(118,72,210,0.55),rgba(72,132,228,0.44));
+  margin-bottom:14px;width:58%;flex-shrink:0;
+  box-shadow:0 1px 0 rgba(255,255,255,0.70) inset;
+}
+.dc-line {
+  height:5px;border-radius:3px;
+  background:linear-gradient(90deg,rgba(118,88,210,0.22),rgba(98,108,210,0.14));
+  margin-bottom:8px;flex-shrink:0;
+}
+.dc-img {
+  flex:1;border-radius:10px;
+  background:linear-gradient(148deg,rgba(195,172,255,0.50),rgba(155,205,255,0.44));
+  box-shadow:0 1px 0 rgba(255,255,255,0.95) inset,0 2px 6px rgba(118,88,210,0.10);
+  margin-top:4px;
+}
+.dc-two { flex:1;display:flex;gap:12px;margin-top:4px; }
+.dc-col {
+  flex:1;border-radius:8px;
+  background:linear-gradient(150deg,rgba(128,95,215,0.16),rgba(108,125,215,0.10));
+  box-shadow:0 1px 0 rgba(255,255,255,0.90) inset;
+}
+
+/* 파티클 */
+.particle-container { position:absolute;width:100%;height:100%;pointer-events:none;overflow:hidden;border-radius:14px; }
+
+/* ────────────────────────────────
+   썸네일 갤러리
+──────────────────────────────── */
+.thumb-gallery {
+  position:absolute;
+  display:flex; gap:8px; align-items:flex-start;
+  opacity:0; z-index:20;
+  left:calc(50% - 226px); /* 5개×84px + 4×8px gap = 452px → 226px offset */
+  top:calc(50% + 136px);
+}
+.thumb {
+  width:84px; height:58px;
+  border-radius:7px;
+  background:rgba(248,244,255,0.96);
+  border:1px solid rgba(255,255,255,0.90);
+  box-shadow:0 4px 14px rgba(108,82,198,0.13),0 1px 4px rgba(108,82,198,0.07),0 1px 0 rgba(255,255,255,0.98) inset;
+  overflow:hidden; position:relative; flex-shrink:0;
+  opacity:0.30;
+  transition:opacity 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+.thumb.active {
+  opacity:1;
+  box-shadow:0 0 0 2px rgba(128,88,218,0.55), 0 0 12px rgba(128,88,218,0.18), 0 4px 14px rgba(108,82,198,0.18),0 1px 0 rgba(255,255,255,0.98) inset;
+}
+
+/* 썸네일 공통 MC */
+.t-mc {
+  height:9px; display:flex; align-items:center; padding:0 5px; gap:3px;
+  background:linear-gradient(90deg,rgba(218,208,255,0.80),rgba(200,220,255,0.72));
+  border-bottom:1px solid rgba(148,108,228,0.16);
+  flex-shrink:0;
+}
+.t-mc-gem { width:3px;height:3px;background:rgba(138,105,218,0.45);transform:rotate(45deg);flex-shrink:0; }
+.t-mc-bar { flex:1;height:2px;border-radius:1px;background:linear-gradient(90deg,rgba(122,82,215,0.50),rgba(82,132,228,0.34)); }
+.t-mc-dots { display:flex;gap:2px; }
+.t-mc-dots span { width:2px;height:2px;border-radius:50%;background:rgba(138,105,218,0.22); }
+
+/* 썸네일 BC 공통 래퍼 */
+.t-bc { flex:1; display:flex; overflow:hidden; min-height:0; }
+
+/* ── thumb0: 텍스트 좌 + 이미지 우 (메인BC와 동일) ── */
+.t0-text { flex:1;padding:5px 4px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:linear-gradient(160deg,rgba(250,246,255,0.97),rgba(240,233,255,0.93)); }
+.t0-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.16));flex-shrink:0; }
+.t0-img { width:26px;flex-shrink:0;background:linear-gradient(145deg,rgba(138,195,255,0.68),rgba(128,155,245,0.68));position:relative; }
+.t0-img::before { content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.22),transparent); }
+
+/* ── thumb1: 상단 이미지 + 하단 텍스트 ── */
+.t1-img { height:28px;background:linear-gradient(135deg,rgba(168,212,255,0.55),rgba(178,162,255,0.44));position:relative;flex-shrink:0; }
+.t1-img::before { content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.20),transparent); }
+.t1-text { flex:1;padding:4px 5px;display:flex;flex-direction:column;gap:2.5px;background:linear-gradient(160deg,rgba(250,246,255,0.97),rgba(240,233,255,0.93)); }
+.t1-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.26),rgba(98,118,210,0.15));flex-shrink:0; }
+
+/* ── thumb2: 2컬럼 ── */
+.t2-cols { flex:1;display:flex;gap:0;background:linear-gradient(160deg,rgba(250,246,255,0.97),rgba(240,233,255,0.93)); }
+.t2-col { flex:1;padding:5px 4px;display:flex;flex-direction:column;gap:2.5px; }
+.t2-col:first-child { border-right:1px solid rgba(148,108,228,0.10); }
+.t2-col-img { border-radius:4px;background:linear-gradient(145deg,rgba(138,195,255,0.55),rgba(155,145,248,0.45));flex:1; }
+.t2-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.24),rgba(98,118,210,0.13));flex-shrink:0; }
+
+/* ── thumb3: 큰 이미지 전면 ── */
+.t3-bigimg { flex:1;background:rgba(168,195,255,0.52);position:relative; }
+.t3-overlay { position:absolute;bottom:0;left:0;right:0;padding:4px 5px;background:rgba(240,233,255,0.92);display:flex;flex-direction:column;gap:2px; }
+.t3-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.16));flex-shrink:0; }
+
+/* ── thumb4: 텍스트 위주 ── */
+.t4-text { flex:1;padding:5px 5px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:linear-gradient(160deg,rgba(250,246,255,0.97),rgba(240,233,255,0.93)); }
+.t4-title { height:3px;border-radius:1.5px;background:linear-gradient(90deg,rgba(108,68,205,0.44),rgba(82,122,218,0.30));flex-shrink:0; }
+.t4-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.22),rgba(98,118,210,0.13));flex-shrink:0; }
+.t4-divider { height:1px;background:linear-gradient(90deg,transparent,rgba(148,108,228,0.14),transparent);flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+<div class="bg-orb orb3"></div>
+<div class="bg-orb orb4"></div>
+<div class="bg-orb orb5"></div>
+
+<div class="scene" id="scene">
+
+  <!-- 슬라이드 배경 -->
+  <div class="base-slide" id="baseSlide"></div>
+
+  <!-- MC 헤더: 얇은 라인 -->
+  <div class="mc-header" id="mcHeader">
+    <div class="mc-gem"></div>
+    <div class="mc-bar" id="mcBar"></div>
+  </div>
+
+  <!-- BC body: 텍스트(좌) + 이미지(우) — 이미지와 동일 구조 -->
+  <div class="bc-body" id="bcBody">
+    <div class="bc-text" id="bcText">
+      <div class="trl" id="trl0"></div>
+      <div class="trl" id="trl1"></div>
+      <div class="trl" id="trl2"></div>
+      <div class="trl" id="trl3"></div>
+      <div class="trl" id="trl4"></div>
+    </div>
+    <div class="bc-image" id="bcImage">
+      <div class="img-fill" id="imgFill"><div class="img-icon"></div></div>
+    </div>
+  </div>
+
+  <!-- 썸네일 갤러리 -->
+  <div class="thumb-gallery" id="thumbGallery">
+
+    <!-- thumb0: 텍스트 위주 (1번 자리) -->
+    <div class="thumb" id="thumb0">
+      <div style="display:flex;flex-direction:column;height:100%">
+        <div class="t-mc"><div class="t-mc-gem"></div><div class="t-mc-bar"></div></div>
+        <div class="t-bc">
+          <div class="t4-text">
+            <div class="t4-title" style="width:60%"></div>
+            <div class="t4-divider"></div>
+            <div class="t4-line" style="height:2px;width:92%"></div>
+            <div class="t4-line" style="height:2px;width:76%"></div>
+            <div class="t4-line" style="height:2px;width:84%"></div>
+            <div class="t4-line" style="height:2px;width:64%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- thumb1: 상단 이미지 + 하단 텍스트 -->
+    <div class="thumb" id="thumb1">
+      <div style="display:flex;flex-direction:column;height:100%">
+        <div class="t-mc"><div class="t-mc-gem"></div><div class="t-mc-bar"></div></div>
+        <div class="t-bc" style="flex-direction:column;">
+          <div class="t1-img"></div>
+          <div class="t1-text">
+            <div class="t1-line" style="height:2.5px;width:78%"></div>
+            <div class="t1-line" style="height:2px;width:58%"></div>
+            <div class="t1-line" style="height:2px;width:85%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- thumb2: 2컬럼 -->
+    <div class="thumb" id="thumb2">
+      <div style="display:flex;flex-direction:column;height:100%">
+        <div class="t-mc"><div class="t-mc-gem"></div><div class="t-mc-bar"></div></div>
+        <div class="t-bc">
+          <div class="t2-cols">
+            <div class="t2-col">
+              <div class="t2-col-img"></div>
+              <div class="t2-line" style="height:2px;width:80%"></div>
+              <div class="t2-line" style="height:2px;width:62%"></div>
+            </div>
+            <div class="t2-col">
+              <div class="t2-col-img"></div>
+              <div class="t2-line" style="height:2px;width:72%"></div>
+              <div class="t2-line" style="height:2px;width:88%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- thumb3: 큰 이미지 전면 -->
+    <div class="thumb" id="thumb3">
+      <div style="display:flex;flex-direction:column;height:100%">
+        <div class="t-mc"><div class="t-mc-gem"></div><div class="t-mc-bar"></div></div>
+        <div class="t-bc" style="padding:3px 4px 3px;">
+          <div class="t3-bigimg" style="flex:1;border-radius:5px;overflow:hidden;">
+            <div class="t3-overlay">
+              <div class="t3-line" style="height:2.5px;width:70%"></div>
+              <div class="t3-line" style="height:2px;width:52%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- thumb4: 텍스트 좌 + 이미지 우 (5번 자리) -->
+    <div class="thumb" id="thumb4">
+      <div style="display:flex;flex-direction:column;height:100%">
+        <div class="t-mc"><div class="t-mc-gem"></div><div class="t-mc-bar"></div></div>
+        <div class="t-bc">
+          <div class="t0-text">
+            <div class="t0-line" style="height:2.5px;width:85%"></div>
+            <div class="t0-line" style="height:2px;width:68%"></div>
+            <div class="t0-line" style="height:2px;width:90%"></div>
+            <div class="t0-line" style="height:2px;width:55%"></div>
+          </div>
+          <div style="width:24px;flex-shrink:0;padding:3px 3px 3px 0;">
+            <div style="width:100%;height:100%;border-radius:3px;
+              background:linear-gradient(145deg,rgba(138,195,255,0.68),rgba(128,155,245,0.68));"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 덱 (v04-19 구조 복원) -->
+  <div class="deck-container" id="deckContainer">
+    <!-- dc0: 제목 + 텍스트 + 하단 이미지 -->
+    <div class="deck-card" id="dc0">
+      <div class="dc-body">
+        <div class="dc-hbar" style="background:linear-gradient(90deg,rgba(108,62,215,0.58),rgba(62,128,228,0.46));width:55%"></div>
+        <div class="dc-line" style="width:82%"></div>
+        <div class="dc-line" style="width:68%"></div>
+        <div class="dc-line" style="width:74%"></div>
+        <div class="dc-img" style="background:linear-gradient(148deg,rgba(185,158,255,0.52),rgba(148,205,255,0.46))"></div>
+      </div>
+    </div>
+    <!-- dc1: 두 컬럼 레이아웃 -->
+    <div class="deck-card" id="dc1">
+      <div class="dc-body">
+        <div class="dc-hbar" style="background:linear-gradient(90deg,rgba(62,148,228,0.55),rgba(62,208,198,0.44));width:50%"></div>
+        <div class="dc-two">
+          <div class="dc-col" style="background:linear-gradient(150deg,rgba(112,178,248,0.22),rgba(88,208,218,0.14))"></div>
+          <div class="dc-col" style="background:linear-gradient(150deg,rgba(88,148,238,0.20),rgba(72,188,208,0.12))"></div>
+        </div>
+      </div>
+    </div>
+    <!-- dc2: 텍스트 위주 -->
+    <div class="deck-card" id="dc2">
+      <div class="dc-body">
+        <div class="dc-hbar" style="background:linear-gradient(90deg,rgba(148,88,228,0.52),rgba(198,88,198,0.40));width:62%"></div>
+        <div class="dc-line" style="width:90%"></div>
+        <div class="dc-line" style="width:76%"></div>
+        <div class="dc-line" style="width:84%"></div>
+        <div class="dc-line" style="width:64%"></div>
+        <div class="dc-line" style="width:78%"></div>
+      </div>
+    </div>
+    <!-- dc3: 이미지 상단 -->
+    <div class="deck-card" id="dc3">
+      <div class="dc-body">
+        <div class="dc-img" style="flex:0.52;background:linear-gradient(135deg,rgba(168,212,255,0.55),rgba(138,185,255,0.48),rgba(178,162,255,0.44))"></div>
+        <div style="margin-top:12px">
+          <div class="dc-hbar" style="background:linear-gradient(90deg,rgba(88,158,245,0.52),rgba(118,108,228,0.40));width:48%"></div>
+          <div class="dc-line" style="width:70%"></div>
+          <div class="dc-line" style="width:58%"></div>
+        </div>
+      </div>
+    </div>
+    <!-- dc4: 완성형 텍스트+이미지 -->
+    <div class="deck-card" id="dc4">
+      <div class="dc-body">
+        <div class="dc-hbar" style="background:linear-gradient(90deg,rgba(118,72,210,0.56),rgba(72,132,228,0.45));width:60%"></div>
+        <div style="flex:1;display:flex;gap:12px;margin-top:6px;">
+          <div style="flex:1;display:flex;flex-direction:column;gap:7px;padding-top:1px;">
+            <div class="dc-line" style="width:88%"></div>
+            <div class="dc-line" style="width:72%"></div>
+            <div class="dc-line" style="width:92%"></div>
+            <div class="dc-line" style="width:64%"></div>
+            <div class="dc-line" style="width:78%;height:4px;"></div>
+          </div>
+          <div style="width:90px;flex-shrink:0;border-radius:9px;
+            background:linear-gradient(148deg,rgba(138,195,255,0.56),rgba(168,158,255,0.44));
+            box-shadow:0 1px 0 rgba(255,255,255,0.92) inset,0 2px 8px rgba(88,128,228,0.14);
+            position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.22),transparent)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="particle-container" id="particleContainer"></div>
+</div>
+
+<script>
+const STAGE = 7000;
+const REPEAT = 3;
+
+const scene         = document.getElementById('scene');
+const baseSlide     = document.getElementById('baseSlide');
+const mcHeader      = document.getElementById('mcHeader');
+const mcBar         = document.getElementById('mcBar');
+const bcBody        = document.getElementById('bcBody');
+const imgFill       = document.getElementById('imgFill');
+const trlEls        = [0,1,2,3,4].map(i=>document.getElementById('trl'+i));
+const deckContainer = document.getElementById('deckContainer');
+const deckCards     = [0,1,2,3,4].map(i=>document.getElementById('dc'+i));
+const particleCont  = document.getElementById('particleContainer');
+const thumbGallery  = document.getElementById('thumbGallery');
+const thumbEls      = [0,1,2,3,4].map(i=>document.getElementById('thumb'+i));
+
+// easing
+const easeOut    = t => 1-Math.pow(1-t,3);
+const easeOut4   = t => 1-Math.pow(1-t,4);
+const easeOutExp = t => t===0 ? 0 : 1-Math.pow(2,-10*t);
+const easeOutB2  = t => { const c=2.5*1.5; return 1+c*Math.pow(t-1,3)+(c-1)*Math.pow(t-1,2); };
+const easeIO     = t => t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const lerp       = (a,b,t) => a+(b-a)*t;
+
+const raf2   = fn => setTimeout(()=>fn(performance.now()),16);
+const waitMs = ms => new Promise(r=>setTimeout(r,ms));
+function animA(dur,ease,cb){
+  return new Promise(res=>{
+    const s=performance.now();
+    function f(n){ const t=Math.min((n-s)/dur,1); cb(ease(t),t); if(t<1)raf2(f); else res(); }
+    raf2(f);
+  });
+}
+
+// particle
+let particleFired=false, particleStyleOk=false;
+function fireParticles(){
+  if(particleFired) return; particleFired=true;
+  if(!particleStyleOk){
+    particleStyleOk=true;
+    const s=document.createElement('style');
+    s.textContent=`
+      @keyframes pA{0%{transform:translate(-50%,-50%)translate(0,0)scale(1);opacity:.95}100%{transform:translate(-50%,-50%)translate(var(--px),var(--py))scale(0);opacity:0}}
+      @keyframes pB{0%{transform:translate(-50%,-50%)translate(0,0)scale(1)rotate(0deg);opacity:.90}100%{transform:translate(-50%,-50%)translate(var(--px),var(--py))scale(0)rotate(180deg);opacity:0}}
+    `;
+    document.head.appendChild(s);
+  }
+  particleCont.innerHTML='';
+  const cols=['#b892e8','#8ac3f0','#dab8f8','#72ccde','#d0a8f8','#68d8a8','#f0b8d8','#a8e8d0'];
+  for(let i=0;i<28;i++){
+    const p=document.createElement('div');
+    const a=(i/28)*Math.PI*2+(Math.random()-0.5)*0.4;
+    const d=48+Math.random()*68;
+    const col=cols[Math.floor(Math.random()*cols.length)];
+    const sz=2+Math.random()*6;
+    const isSquare=Math.random()<0.25;
+    const dur=0.65+Math.random()*0.55;
+    const delay=Math.random()*0.20;
+    p.style.cssText=`position:absolute;left:50%;top:50%;width:${sz}px;height:${sz}px;
+      border-radius:${isSquare?'2px':'50%'};background:${col};opacity:0;
+      animation:${isSquare?'pB':'pA'} ${dur}s ${delay}s ease-out forwards;
+      --px:${Math.cos(a)*d}px;--py:${Math.sin(a)*d}px`;
+    particleCont.appendChild(p);
+  }
+}
+
+// ── reset ──
+function resetMC(){
+  mcHeader.style.opacity='1';
+  mcBar.style.width='0%';
+  mcBar.classList.remove('filled');
+}
+function resetBC(){
+  bcBody.style.display='none';
+  bcBody.style.opacity='';
+  bcBody.style.transform='';
+  bcBody.style.transition='none';
+  const fill=document.getElementById('imgFill');
+  if(fill) fill.style.opacity='0';
+  trlEls.forEach(el=>{ if(el) el.style.width='0%'; });
+}
+function resetDeck(){
+  deckContainer.style.opacity='0';
+  deckCards.forEach((dc,i)=>{
+    dc.style.opacity='0';
+    dc.style.transform='translateZ(0) translateY(0) rotate(0deg)';
+    dc.style.zIndex=String(i+1);
+    dc.style.boxShadow='';
+  });
+  particleFired=false;
+  particleCont.innerHTML='';
+}
+function resetAll(){
+  baseSlide.style.opacity='1';
+  resetMC(); resetBC(); resetDeck();
+  thumbGallery.style.opacity='0';
+  thumbEls.forEach(t=>t.classList.remove('active'));
+}
+
+// ── BC 레이아웃 정의 (루프별) ──
+// loopIdx 0→thumb2(2컬럼), 1→thumb3(큰이미지), 2→thumb4(텍스트+이미지)
+const bcLayouts = [
+  // loop 0: 2컬럼
+  {
+    thumbIdx: 2,
+    html: `
+      <div class="bc-cols" style="flex:1;display:flex;gap:0;overflow:hidden;">
+        <div style="flex:1;padding:14px 10px 12px 14px;display:flex;flex-direction:column;gap:8px;
+          background:linear-gradient(160deg,rgba(250,246,255,0.97),rgba(240,233,255,0.93));
+          border-right:1px solid rgba(148,108,228,0.10);">
+          <div class="bc-col-img" style="flex:1;border-radius:8px;
+            background:linear-gradient(145deg,rgba(138,195,255,0.60),rgba(155,145,248,0.50));
+            position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.24),transparent)"></div>
+          </div>
+          <div class="bc-col-l1" style="height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.16));width:0%"></div>
+          <div class="bc-col-l2" style="height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(118,82,210,0.20),rgba(98,118,210,0.12));width:0%"></div>
+        </div>
+        <div style="flex:1;padding:14px 14px 12px 10px;display:flex;flex-direction:column;gap:8px;
+          background:linear-gradient(160deg,rgba(250,246,255,0.97),rgba(240,233,255,0.93));">
+          <div class="bc-col-img2" style="flex:1;border-radius:8px;
+            background:linear-gradient(145deg,rgba(168,195,255,0.55),rgba(128,175,248,0.46));
+            position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.22),transparent)"></div>
+          </div>
+          <div class="bc-col-l3" style="height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(118,82,210,0.26),rgba(98,118,210,0.14));width:0%"></div>
+          <div class="bc-col-l4" style="height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(118,82,210,0.18),rgba(98,118,210,0.10));width:0%"></div>
+        </div>
+      </div>`,
+    animate(t) {
+      const d=[0.03,0.14,0.25,0.14,0.25];
+      const w=[80,62,72,88,null];
+      const cls=['bc-col-l1','bc-col-l2','bc-col-l3','bc-col-l4'];
+      const ws=[80,62,72,88];
+      const ds=[0.03,0.14,0.25,0.36];
+      cls.forEach((c,i)=>{
+        const el=bcBody.querySelector('.'+c);
+        if(el && t>ds[i]) el.style.width=easeOutExp(Math.min((t-ds[i])/0.13,1))*ws[i]+'%';
+      });
+    }
+  },
+  // loop 1: 큰 이미지
+  {
+    thumbIdx: 3,
+    html: `
+      <div style="position:absolute;inset:0;
+        background:linear-gradient(160deg,rgba(250,246,255,0.97),rgba(240,233,255,0.93));">
+        <div style="position:absolute;inset:12px 14px;border-radius:10px;overflow:hidden;
+          background:rgba(168,195,255,0.52);">
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:16px 14px 14px;
+            background:rgba(240,233,255,0.96);">
+            <div class="bc-big-l1" style="height:7px;border-radius:3px;
+              background:linear-gradient(90deg,rgba(108,68,205,0.44),rgba(82,122,218,0.30));
+              width:0%;margin-bottom:10px"></div>
+            <div class="bc-big-l2" style="height:6px;border-radius:3px;
+              background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.18));
+              width:0%;margin-bottom:8px"></div>
+            <div class="bc-big-l3" style="height:5px;border-radius:3px;
+              background:linear-gradient(90deg,rgba(118,82,210,0.20),rgba(98,118,210,0.12));
+              width:0%"></div>
+          </div>
+        </div>
+      </div>`,
+    animate(t) {
+      const cls=['bc-big-l1','bc-big-l2','bc-big-l3'];
+      const ws=[58,76,48];
+      const ds=[0.03,0.13,0.22];
+      cls.forEach((c,i)=>{
+        const el=bcBody.querySelector('.'+c);
+        if(el && t>ds[i]) el.style.width=easeOutExp(Math.min((t-ds[i])/0.13,1))*ws[i]+'%';
+      });
+    }
+  },
+  // loop 2: 텍스트 영역(좌) + 이미지 블록(우, 패딩)
+  {
+    thumbIdx: 4,
+    html: `
+      <div style="position:absolute;inset:0;display:flex;
+        background:linear-gradient(160deg,rgba(250,246,255,0.97) 0%,rgba(240,233,255,0.93) 100%);">
+        <div style="flex:1;"></div>
+        <div style="width:134px;flex-shrink:0;padding:12px 14px 12px 0;">
+          <div style="width:100%;height:100%;border-radius:10px;overflow:hidden;
+            background:linear-gradient(145deg,rgba(138,195,255,0.68) 0%,rgba(108,175,252,0.75) 30%,rgba(128,155,245,0.68) 65%,rgba(155,145,248,0.62) 100%);
+            background-size:200% 200%;animation:imgBgAnim 6s ease-in-out infinite;
+            position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.26),transparent);pointer-events:none;"></div>
+          </div>
+        </div>
+      </div>`,
+    animate(t) {}
+  }
+];
+
+let loopIdx=0; // 현재 루프 인덱스
+
+// BC에 레이아웃 적용
+function setBCLayout(idx){
+  bcBody.innerHTML = bcLayouts[idx].html;
+  // trlEls 재바인딩 (loop2만 trl이 있음)
+  for(let i=0;i<5;i++){
+    const el=document.getElementById('trl'+i);
+    if(el) trlEls[i]=el; else trlEls[i]=null;
+  }
+  const fill=document.getElementById('imgFill');
+  if(fill) fill.style.opacity='1'; // fly-in 시 꽉 찬 상태
+}
+
+// BC fly-in 전 꽉 찬 상태로 세팅
+function setBCFull(idx){
+  // loop0(2컬럼): 라인들 꽉 채우기
+  if(idx===0){
+    const cls=['bc-col-l1','bc-col-l2','bc-col-l3','bc-col-l4'];
+    const ws=[80,62,72,88];
+    cls.forEach((c,i)=>{ const el=bcBody.querySelector('.'+c); if(el) el.style.width=ws[i]+'%'; });
+  }
+  // loop1(큰이미지): 라인들 꽉 채우기 (fly-in 전에 내용 있어야 함)
+  if(idx===1){
+    const cls=['bc-big-l1','bc-big-l2','bc-big-l3'];
+    const ws=[58,76,48];
+    cls.forEach((c,i)=>{ const el=bcBody.querySelector('.'+c); if(el) el.style.width=ws[i]+'%'; });
+  }
+}
+
+// ── Stage 0: 썸네일 갤러리 → 순서 활성화 → 선택 BC fly-in ──
+async function stage0Seq(){
+  const layout = bcLayouts[loopIdx];
+  const thumbIdx = layout.thumbIdx; // 2,3,4 순서
+
+  // BC 레이아웃 세팅 (fly-in 전 꽉 찬 상태)
+  setBCLayout(loopIdx);
+  setBCFull(loopIdx);
+
+  // MC bar 채우기
+  await animA(480,easeOutExp, e=>{ mcBar.style.width=(e*100)+'%'; });
+  mcBar.classList.add('filled');
+  await waitMs(200);
+
+  // 갤러리 fade-in
+  await animA(300,easeOut, e=>{ thumbGallery.style.opacity=String(e); });
+  await waitMs(120);
+
+  // 썸네일 순서대로 활성화 → 채택 썸네일에서 멈춤
+  for(let i=0;i<5;i++){
+    if(i>0) thumbEls[i-1].classList.remove('active');
+    thumbEls[i].classList.add('active');
+    // 채택 썸네일이면 여기서 멈춤 (이후는 비활성 유지)
+    if(i===thumbIdx){ await waitMs(340); break; }
+    await waitMs(230);
+  }
+
+  // 선택된 썸네일 위치 계산
+  // thumbGallery: left=70, top=386
+  const GAL_LEFT=54, GAL_TOP=386;
+  const TH_W=84, TH_GAP=8, TH_MC_H=9;
+  const srcBCx = GAL_LEFT + (TH_W+TH_GAP)*thumbIdx;
+  const srcBCy = GAL_TOP + TH_MC_H;
+  const srcBCw = TH_W;
+  const srcBCh = 58 - TH_MC_H; // 49px
+
+  const BCW=360, BCH=216;
+  const tX=100, tY=154;
+  const sc0=srcBCw/BCW;
+
+  const initX = srcBCx - (BCW - srcBCw)/2;
+  const initY = srcBCy - (BCH - srcBCh)/2;
+
+  const dispMode0 = (loopIdx===1||loopIdx===2) ? 'block' : 'flex';
+  bcBody.style.cssText=`
+    display:${dispMode0};position:absolute;left:0;top:0;
+    width:${BCW}px;height:${BCH}px;overflow:hidden;
+    opacity:0;z-index:10;transition:none;
+    transform:translate(${initX}px,${initY}px) scale(${sc0}) rotate(1.5deg);
+    transform-origin:center center;
+  `;
+  // innerHTML 재적용 후 style이 덮어쓰여지므로 다시 꽉 찬 상태 적용
+  setBCFull(loopIdx);
+
+  // 선택 썸네일 강조 pulse
+  thumbEls[thumbIdx].style.transition='box-shadow 0.15s ease,transform 0.15s ease';
+  thumbEls[thumbIdx].style.boxShadow='0 0 0 2.5px rgba(128,88,218,0.68),0 0 18px rgba(128,88,218,0.28),0 4px 14px rgba(108,82,198,0.22)';
+  thumbEls[thumbIdx].style.transform='scale(1.07)';
+  await waitMs(170);
+  thumbEls[thumbIdx].style.boxShadow='';
+  thumbEls[thumbIdx].style.transform='scale(1)';
+  thumbEls[thumbIdx].style.transition='none';
+  await waitMs(90);
+
+  // 갤러리 fade-out
+  animA(280,easeOut, e=>{ thumbGallery.style.opacity=String(1-e); });
+
+  // BC fly-in
+  const sx=initX, sy=initY;
+  await animA(580,easeOut,(e,t)=>{
+    const x=lerp(sx,tX,e);
+    const y=lerp(sy,tY,e);
+    const sc=lerp(sc0,1,easeOut(e));
+    const rz=lerp(1.5,0,easeOut(e));
+    bcBody.style.transform=`translate(${x}px,${y}px) scale(${sc}) rotate(${rz}deg)`;
+    bcBody.style.opacity=String(Math.min(e*2.0,1));
+  });
+  bcBody.style.transform=`translate(${tX}px,${tY}px) scale(1) rotate(0deg)`;
+
+  // glow flash
+  bcBody.style.boxShadow='0 0 0 3px rgba(148,98,238,0.50),0 0 22px rgba(128,82,218,0.24)';
+  await waitMs(55);
+  bcBody.style.transition='box-shadow 0.60s cubic-bezier(0.16,1,0.3,1)';
+  bcBody.style.boxShadow='0 0 0 0px rgba(148,98,238,0),0 4px 16px rgba(118,72,198,0.08)';
+  await waitMs(180);
+  bcBody.style.transition='none';
+
+  thumbGallery.style.opacity='0';
+
+  // 정착 (loop1/loop2는 block, 나머지는 flex)
+  const dispMode = (loopIdx===1||loopIdx===2) ? 'block' : 'flex';
+  bcBody.style.cssText=`display:${dispMode};opacity:1;transform:none;position:absolute;left:calc(50% - 180px);top:calc(50% - 96px);width:360px;height:216px;overflow:hidden`;
+
+  await waitMs(2200);
+}
+
+async function runStage0(){
+  for(let i=0;i<REPEAT;i++){
+    loopIdx=i;
+    resetAll();
+    await stage0Seq();
+    if(i<REPEAT-1){
+      await new Promise(res=>{
+        bcBody.style.transition='opacity 0.4s ease';
+        bcBody.style.opacity='0';
+        setTimeout(()=>{ bcBody.style.transition='none'; bcBody.style.display='none'; res(); },420);
+      });
+      resetBC();
+    }
+  }
+  startStage1();
+}
+
+// ── Stage 1: 콘텐츠 타이핑 어포던스 ──
+function startStage1(){
+  majorStage=1; cycleCount=0;
+  // loopIdx는 runStage0에서 마지막 루프값(2) 유지
+  // BC 레이아웃은 stage0Seq에서 이미 세팅됨 — 라인만 0으로 리셋
+  const disp1=(loopIdx===1||loopIdx===2)?'block':'flex';
+  bcBody.style.cssText=`display:${disp1};opacity:1;transform:none;position:absolute;left:calc(50% - 180px);top:calc(50% - 96px);width:360px;height:216px;overflow:hidden`;
+  mcBar.style.width='0%';
+  // 모든 라인 0으로 리셋
+  bcBody.querySelectorAll('[style*="width"]').forEach(el=>{
+    if(el.style.height && !el.classList.contains('bc-image') && !el.classList.contains('bc-col-img') && !el.classList.contains('bc-col-img2')) {
+      el.style.width='0%';
+    }
+  });
+  const fill=document.getElementById('imgFill');
+  if(fill) fill.style.opacity='0';
+  cycleStart=performance.now();
+  raf2(mainLoop);
+}
+
+function animStage1(elapsed){
+  const t=elapsed/STAGE;
+  baseSlide.style.opacity='1';
+  mcHeader.style.opacity='1';
+  bcBody.style.display='flex'; bcBody.style.opacity='1'; bcBody.style.transform='none';
+  mcBar.style.width=easeOutExp(Math.min(Math.max(t-0.03,0)/0.14,1))*100+'%';
+  // 루프별 레이아웃 animate 실행
+  bcLayouts[loopIdx].animate(t);
+}
+
+// ── Stage 2: deck fan-out ──
+const fanAngles=[-26,-13,0,13,26];
+const fanX=[-52,-26,0,26,52];
+const cardZ=[-64,-48,-32,-16,0];
+const cardY=[-20,-15,-10,-5,0];
+
+function animStage2(el){
+  const t=el/STAGE;
+  // MC/BC/baseSlide는 Stage2 진입 전 이미 숨김 처리됨 → 여기선 덱만 제어
+  if(t>0.0){
+    deckContainer.style.opacity='1';
+    const dT=Math.min((t-0.08)/0.92,1);
+    const fanPeak=0.38, stackEnd=0.72;
+    deckCards.forEach((dc,i)=>{
+      const delay=i*0.045;
+      if(dT>delay){
+        dc.style.opacity=String(Math.min((dT-delay)/0.28*3.5,1));
+        let rx,ty,tz,rz;
+        if(dT<fanPeak){
+          const fT=easeOutB2(Math.min(dT/fanPeak,1));
+          rz=fanAngles[i]*fT; rx=fanX[i]*fT; ty=0; tz=0;
+        } else if(dT<stackEnd){
+          const sT=easeOutExp((dT-fanPeak)/(stackEnd-fanPeak));
+          rz=fanAngles[i]*(1-sT); rx=fanX[i]*(1-sT);
+          tz=cardZ[i]*sT; ty=cardY[i]*sT;
+        } else {
+          const fT=(dT-stackEnd)/(1-stackEnd);
+          const breathe=Math.sin(fT*Math.PI*2.2+i*0.28)*2.2;
+          rz=0; rx=0; tz=cardZ[i]; ty=cardY[i]+breathe*(1-i*0.15);
+          if(i===4){
+            const shadowDepth=0.5+0.5*(breathe/2.2+1)/2;
+            dc.style.boxShadow=`0 1px 0 rgba(255,255,255,0.98) inset,0 ${12+shadowDepth*8}px ${28+shadowDepth*12}px rgba(108,82,198,${0.09+shadowDepth*0.05}),0 ${6+shadowDepth*4}px ${14+shadowDepth*6}px rgba(92,112,198,${0.06+shadowDepth*0.03}),inset 1px 0 0 rgba(255,255,255,0.55)`;
+          }
+        }
+        dc.style.transform=`translateX(${rx}px) translateY(${ty}px) translateZ(${tz}px) rotate(${rz}deg)`;
+        dc.style.zIndex=String(i+1);
+        if(dT>stackEnd) fireParticles();
+      }
+    });
+  }
+}
+
+// ── main rAF loop ──
+let majorStage=1, cycleCount=0, cycleStart=null, inTrans=false;
+
+function mainLoop(ts){
+  if(!cycleStart) cycleStart=ts;
+  const el=ts-cycleStart;
+  if(el>=STAGE && !inTrans){
+    inTrans=true; cycleCount++;
+    if(majorStage===1){
+      if(cycleCount>=REPEAT){
+        bcBody.style.display='flex';
+        animA(400,easeIO,e=>{
+          [mcHeader,bcBody,baseSlide].forEach(l=>{ l.style.opacity=String(1-e); });
+        }).then(()=>{
+          bcBody.style.display='none';
+          mcHeader.style.opacity='0';
+          baseSlide.style.opacity='0';
+          majorStage=2; cycleCount=0;
+          resetDeck();
+          cycleStart=performance.now(); inTrans=false;
+        });
+      } else {
+        // 다음 루프 레이아웃으로 교체 (loopIdx 순환: 0→1→2)
+        loopIdx=(loopIdx+1)%REPEAT;
+        setBCLayout(loopIdx);
+        const disp2=(loopIdx===1||loopIdx===2)?'block':'flex';
+        bcBody.style.cssText=`display:${disp2};opacity:1;transform:none;position:absolute;left:calc(50% - 180px);top:calc(50% - 96px);width:360px;height:216px;overflow:hidden`;
+        mcBar.style.width='0%';
+        const fill2=document.getElementById('imgFill');
+        if(fill2) fill2.style.opacity='0';
+        cycleStart=performance.now(); inTrans=false;
+      }
+    } else {
+      resetDeck();
+      cycleStart=performance.now(); inTrans=false;
+    }
+  }
+  if(!inTrans){
+    const cEl=Math.min(ts-cycleStart,STAGE);
+    if(majorStage===1) animStage1(cEl);
+    else animStage2(cEl);
+  }
+  if(document.hidden) setTimeout(()=>mainLoop(performance.now()),16);
+  else requestAnimationFrame(mainLoop);
+}
+
+// kick-off
+resetAll();
+runStage0();
+</script>
+</body>
+</html>

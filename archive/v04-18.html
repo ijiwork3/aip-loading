@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>v04-18</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  width:100vw; height:100vh; overflow:hidden;
+  background:linear-gradient(158deg,#E8DFFB 0%,#DDE9FB 46%,#D0E7F9 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+  position:relative;
+}
+
+.bg-orb { position:fixed; border-radius:50%; pointer-events:none; }
+.orb1 { width:580px;height:580px;background:radial-gradient(circle at 38% 38%,rgba(178,138,255,0.44) 0%,transparent 60%);filter:blur(90px);opacity:0.74;top:-150px;left:-130px;animation:orb1 16s ease-in-out infinite alternate; }
+.orb2 { width:480px;height:480px;background:radial-gradient(circle at 55% 55%,rgba(98,195,255,0.40) 0%,transparent 62%);filter:blur(94px);opacity:0.70;bottom:-120px;right:-100px;animation:orb2 20s ease-in-out infinite alternate; }
+.orb3 { width:320px;height:320px;background:radial-gradient(circle at 50% 50%,rgba(195,165,255,0.36) 0%,transparent 62%);filter:blur(74px);opacity:0.64;top:36%;left:60%;animation:orb3 13s ease-in-out infinite alternate; }
+.orb4 { width:240px;height:240px;background:radial-gradient(circle at 50% 50%,rgba(148,205,255,0.34) 0%,transparent 62%);filter:blur(64px);opacity:0.60;top:8%;right:12%;animation:orb4 9s ease-in-out infinite alternate; }
+/* 5번째 orb - 중앙 하단 미묘한 피치 */
+.orb5 { width:200px;height:200px;background:radial-gradient(circle at 50% 50%,rgba(255,178,198,0.22) 0%,transparent 62%);filter:blur(80px);opacity:0.48;bottom:5%;left:38%;animation:orb5 11s ease-in-out infinite alternate; }
+@keyframes orb1{0%{transform:translate(0,0)scale(1)}100%{transform:translate(65px,45px)scale(1.18)}}
+@keyframes orb2{0%{transform:translate(0,0)scale(1)}100%{transform:translate(-55px,-38px)scale(1.12)}}
+@keyframes orb3{0%{transform:translate(0,0)scale(1)}100%{transform:translate(-42px,32px)scale(0.88)}}
+@keyframes orb4{0%{transform:translate(0,0)scale(1)}100%{transform:translate(20px,-25px)scale(1.08)}}
+@keyframes orb5{0%{transform:translate(0,0)scale(1)}100%{transform:translate(-30px,20px)scale(1.15)}}
+
+.scene {
+  position:relative; width:560px; height:430px;
+  display:flex; align-items:center; justify-content:center;
+  perspective:1000px; z-index:1;
+}
+
+/* ── 슬라이드 배경 ── */
+.base-slide {
+  position:absolute; width:360px; height:240px;
+  background:linear-gradient(155deg,
+    rgba(254,252,255,0.93) 0%,
+    rgba(248,244,255,0.90) 50%,
+    rgba(244,249,255,0.92) 100%
+  );
+  backdrop-filter:blur(40px) saturate(2.1) brightness(1.04);
+  -webkit-backdrop-filter:blur(40px) saturate(2.1) brightness(1.04);
+  border-radius:16px;
+  box-shadow:
+    /* 상단 하이라이트 */
+    0 1px 0 rgba(255,255,255,0.99) inset,
+    /* 사이드 하이라이트 */
+    inset 1px 0 0 rgba(255,255,255,0.62),
+    inset -1px 0 0 rgba(255,255,255,0.42),
+    /* 하단 내부 그림자 */
+    inset 0 -1px 0 rgba(108,82,198,0.07),
+    /* ambient shadow - 넓게 퍼짐 */
+    0 60px 120px rgba(108,82,198,0.18),
+    /* mid shadow */
+    0 24px 56px rgba(92,112,198,0.14),
+    /* contact shadow - 카드 바로 아래 */
+    0 8px 20px rgba(108,82,198,0.10),
+    /* sharp contact */
+    0 2px 6px rgba(108,82,198,0.08);
+  border:1px solid rgba(255,255,255,0.95);
+  overflow:hidden;
+}
+/* glass shimmer sweep across slide */
+.base-slide::before {
+  content:'';
+  position:absolute;
+  top:-50%; left:-60%; width:60%; height:200%;
+  background:linear-gradient(105deg,
+    transparent 0%,
+    rgba(255,255,255,0.12) 50%,
+    transparent 100%
+  );
+  animation:glassShimmer 8s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes glassShimmer {
+  0%   { transform: translateX(0); opacity:0; }
+  10%  { opacity:1; }
+  40%  { transform: translateX(800px); opacity:0.6; }
+  50%  { transform: translateX(900px); opacity:0; }
+  100% { transform: translateX(900px); opacity:0; }
+}
+
+/* ── MC: 슬라이드 상단 header — 처음부터 항상 표시 ── */
+.mc-header {
+  position:absolute;
+  width:360px; height:44px;
+  top:calc(50% - 120px); left:calc(50% - 180px);
+  background:linear-gradient(135deg,
+    rgba(232,218,255,0.88) 0%,
+    rgba(215,228,255,0.80) 60%,
+    rgba(218,232,255,0.82) 100%
+  );
+  backdrop-filter:blur(20px) saturate(1.6);
+  -webkit-backdrop-filter:blur(20px) saturate(1.6);
+  border-radius:16px 16px 0 0;
+  border-bottom:1px solid rgba(200,190,255,0.28);
+  display:flex; align-items:center;
+  padding:0 16px; gap:8px;
+  z-index:3;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.95) inset,
+    0 -1px 0 rgba(148,108,228,0.10) inset,
+    inset 1px 0 0 rgba(255,255,255,0.60),
+    inset -1px 0 0 rgba(255,255,255,0.40);
+}
+.mc-dot { width:7px;height:7px;border-radius:50%;background:rgba(138,105,218,0.48);flex-shrink:0; }
+.mc-bar {
+  flex:1; height:6px; border-radius:3px;
+  background:linear-gradient(90deg,rgba(122,82,215,0.55),rgba(82,132,228,0.42));
+  width:0%; position:relative; overflow:hidden;
+  box-shadow:0 0 0 0 rgba(122,82,215,0);
+  transition:box-shadow 0.3s ease;
+}
+.mc-bar.filled {
+  box-shadow:0 0 6px 1px rgba(122,82,215,0.28), 0 0 12px 2px rgba(82,132,228,0.16);
+  animation:barPulse 2.8s ease-in-out infinite;
+}
+@keyframes barPulse {
+  0%   { box-shadow:0 0 4px 1px rgba(122,82,215,0.22), 0 0 8px 1px rgba(82,132,228,0.12); }
+  50%  { box-shadow:0 0 8px 2px rgba(122,82,215,0.35), 0 0 16px 3px rgba(82,132,228,0.20); }
+  100% { box-shadow:0 0 4px 1px rgba(122,82,215,0.22), 0 0 8px 1px rgba(82,132,228,0.12); }
+}
+.mc-bar::after {
+  content:''; position:absolute; top:0;right:0;bottom:0;width:20px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.65));
+  border-radius:0 3px 3px 0;
+}
+/* mc-bar 내부 shimmer */
+.mc-bar::before {
+  content:''; position:absolute;
+  top:0; left:-50%; bottom:0; width:50%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.40),transparent);
+  animation:mcBarShimmer 3.0s ease-in-out infinite;
+}
+@keyframes mcBarShimmer{
+  0%  { left:-50%; }
+  100%{ left:130%; }
+}
+
+/* ── BC: MC 아래 body 영역 — fly-in으로 착지 ── */
+.bc-body {
+  position:absolute;
+  width:360px; height:196px;
+  top:calc(50% - 120px + 44px); left:calc(50% - 180px);
+  border-radius:0 0 16px 16px;
+  overflow:hidden;
+  display:none; /* JS에서 제어 */
+  z-index:3;
+}
+
+/* BC text area: 따뜻한 라벤더 + dot-grid 텍스처 */
+.bc-text {
+  flex:1; padding:16px 14px 14px 16px;
+  display:flex; flex-direction:column; gap:7px;
+  background:
+    radial-gradient(circle, rgba(148,108,228,0.055) 1px, transparent 1px),
+    linear-gradient(160deg, rgba(250,246,255,0.97) 0%, rgba(240,233,255,0.93) 100%);
+  background-size: 14px 14px, 100% 100%;
+  position:relative;
+}
+/* bc-text 내부 상단 미묘한 구분 */
+.bc-text::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, rgba(255,255,255,0.0), rgba(255,255,255,0.88), rgba(255,255,255,0.0));
+}
+/* bc-text 내부 하단 페이드 */
+.bc-text::after {
+  content:'';
+  position:absolute;
+  bottom:0; left:0; right:0; height:32px;
+  background:linear-gradient(0deg, rgba(240,233,255,0.75), transparent);
+  pointer-events:none;
+}
+
+.trl {
+  height:5px; border-radius:3px;
+  background:linear-gradient(90deg, rgba(118,82,210,0.28), rgba(98,118,210,0.18));
+  width:0%; position:relative; overflow:hidden;
+  flex-shrink:0;
+}
+/* 첫 번째 라인은 더 진하게 (제목처럼) */
+#trl0 {
+  height:6px;
+  background:linear-gradient(90deg, rgba(108,68,205,0.42), rgba(82,122,218,0.28));
+}
+#trl1 {
+  background:linear-gradient(90deg, rgba(118,82,210,0.30), rgba(98,118,210,0.20));
+}
+#trl4 {
+  height:4px;
+  background:linear-gradient(90deg, rgba(118,82,210,0.18), rgba(98,118,210,0.10));
+}
+.trl::after {
+  content:''; position:absolute; top:0;left:-60%;bottom:0;width:60%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.75),transparent);
+  animation:shimmer 2.6s ease-in-out infinite;
+}
+/* 각 trl마다 shimmer 딜레이 다르게 → 파도치는 느낌 */
+#trl0::after { animation-delay: 0s; }
+#trl1::after { animation-delay: 0.18s; }
+#trl2::after { animation-delay: 0.36s; }
+#trl3::after { animation-delay: 0.54s; }
+#trl4::after { animation-delay: 0.72s; }
+@keyframes shimmer{0%{left:-60%}100%{left:110%}}
+
+/* BC image area: 더 생동감 있는 파란-퍼플 그라데이션 */
+.bc-image {
+  width:116px; flex-shrink:0;
+  background:linear-gradient(145deg,
+    rgba(138,195,255,0.68) 0%,
+    rgba(108,175,252,0.75) 30%,
+    rgba(128,155,245,0.68) 65%,
+    rgba(155,145,248,0.62) 100%
+  );
+  background-size:200% 200%;
+  animation:imgBgAnim 6s ease-in-out infinite;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+}
+@keyframes imgBgAnim {
+  0%   { background-position: 0% 0%; }
+  50%  { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+/* 이미지 영역 내부 하이라이트 */
+.bc-image::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0; height:45%;
+  background:linear-gradient(180deg, rgba(255,255,255,0.26) 0%, transparent 100%);
+  pointer-events:none;
+  z-index:1;
+}
+/* 이미지 영역 좌측 경계선 */
+.bc-image::after {
+  content:'';
+  position:absolute;
+  top:8px; bottom:8px; left:0; width:1px;
+  background:linear-gradient(180deg,
+    transparent,
+    rgba(255,255,255,0.60) 30%,
+    rgba(255,255,255,0.60) 70%,
+    transparent
+  );
+  z-index:2;
+}
+
+.img-fill {
+  width:78%; height:70%;
+  background:linear-gradient(135deg,
+    rgba(200,230,255,0.55) 0%,
+    rgba(168,210,255,0.68) 50%,
+    rgba(185,220,255,0.55) 100%
+  );
+  background-size:200% 200%;
+  animation:imgAnim 3.5s ease-in-out infinite;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.68);
+  box-shadow:
+    0 3px 10px rgba(82,128,228,0.22),
+    0 1px 0 rgba(255,255,255,0.80) inset,
+    inset 0 -1px 0 rgba(82,128,228,0.10);
+  z-index:2;
+}
+@keyframes imgAnim{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+/* img-fill 안에 빛 스윕 */
+.img-fill::after {
+  content:'';
+  position:absolute;
+  top:0; left:-70%; width:70%; bottom:0;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,0.28),transparent);
+  animation:imgShimmer 4.2s ease-in-out infinite;
+  border-radius:8px;
+  pointer-events:none;
+}
+@keyframes imgShimmer{
+  0%   { left:-70%; opacity:0; }
+  15%  { opacity:1; }
+  55%  { left:110%; opacity:0.7; }
+  60%  { left:110%; opacity:0; }
+  100% { left:110%; opacity:0; }
+}
+.img-icon {
+  width:26px;height:20px;
+  border:1.5px solid rgba(255,255,255,0.65);
+  border-radius:4px;position:relative;
+  background:rgba(255,255,255,0.28);
+  box-shadow:0 1px 4px rgba(82,128,228,0.18);
+}
+.img-icon::before {
+  content:'';position:absolute;top:3px;left:3px;width:6px;height:6px;
+  border-radius:50%;background:rgba(255,255,255,0.72);
+}
+.img-icon::after {
+  content:'';position:absolute;bottom:0;left:0;right:0;height:9px;
+  background:linear-gradient(135deg,rgba(168,215,255,0.60),rgba(138,188,245,0.70));
+  border-radius:0 0 3px 3px;
+}
+
+/* ── 덱 ── */
+.deck-container {
+  position:absolute; width:360px; height:240px;
+  left:calc(50% - 180px); top:calc(50% - 138px);
+  transform-style:preserve-3d; opacity:0;
+}
+.deck-card {
+  position:absolute; width:360px; height:240px;
+  background:linear-gradient(150deg,rgba(252,249,255,0.95),rgba(244,238,255,0.92));
+  backdrop-filter:blur(36px) saturate(2.0) brightness(1.02);
+  -webkit-backdrop-filter:blur(36px) saturate(2.0) brightness(1.02);
+  border-radius:14px; border:1px solid rgba(255,255,255,0.88);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.98) inset,
+    0 12px 32px rgba(108,82,198,0.10),
+    0 6px 14px rgba(92,112,198,0.07),
+    0 2px 4px rgba(108,82,198,0.04),
+    inset 0 -1px 0 rgba(108,82,198,0.04),
+    inset 1px 0 0 rgba(255,255,255,0.55),
+    inset -1px 0 0 rgba(255,255,255,0.35);
+  overflow:hidden; opacity:0;
+  transform:translateZ(0px) translateY(0px);
+  backface-visibility:hidden;
+  transform-origin:bottom center;
+}
+/* glass shimmer on cards too */
+.deck-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,
+    transparent,
+    rgba(255,255,255,0.90) 30%,
+    rgba(255,255,255,0.90) 70%,
+    transparent
+  );
+}
+.dc-body { padding:18px 20px; width:100%; height:100%; display:flex; flex-direction:column; }
+/* 카드별 헤더 바 색상은 HTML에서 인라인으로 */
+.dc-hbar {
+  height:8px;border-radius:5px;
+  background:linear-gradient(90deg,rgba(118,72,210,0.55),rgba(72,132,228,0.44));
+  margin-bottom:14px;width:58%;flex-shrink:0;
+  box-shadow:0 1px 0 rgba(255,255,255,0.70) inset;
+}
+.dc-line {
+  height:5px;border-radius:3px;
+  background:linear-gradient(90deg,rgba(118,88,210,0.22),rgba(98,108,210,0.14));
+  margin-bottom:8px;flex-shrink:0;
+}
+.dc-img {
+  flex:1;border-radius:10px;
+  background:linear-gradient(148deg,rgba(195,172,255,0.50),rgba(155,205,255,0.44));
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.95) inset,
+    0 2px 6px rgba(118,88,210,0.10);
+  margin-top:4px;
+}
+.dc-two { flex:1;display:flex;gap:12px;margin-top:4px; }
+.dc-col {
+  flex:1;border-radius:8px;
+  background:linear-gradient(150deg,rgba(128,95,215,0.16),rgba(108,125,215,0.10));
+  box-shadow:0 1px 0 rgba(255,255,255,0.90) inset;
+}
+
+/* ── 파티클 ── */
+.particle-container { position:absolute;width:100%;height:100%;pointer-events:none;overflow:hidden;border-radius:14px; }
+</style>
+</head>
+<body>
+
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+<div class="bg-orb orb3"></div>
+<div class="bg-orb orb4"></div>
+<div class="bg-orb orb5"></div>
+
+<div class="scene" id="scene">
+  <!-- 슬라이드 배경 -->
+  <div class="base-slide" id="baseSlide"></div>
+
+  <!-- MC: 처음부터 항상 표시 -->
+  <div class="mc-header" id="mcHeader">
+    <div class="mc-dot"></div>
+    <div class="mc-bar" id="mcBar"></div>
+  </div>
+
+  <!-- BC: 소스 카드에서 날아와 MC 아래 착지 -->
+  <div class="bc-body" id="bcBody">
+    <div class="bc-text" id="bcText">
+      <div class="trl" id="trl0"></div>
+      <div class="trl" id="trl1"></div>
+      <div class="trl" id="trl2"></div>
+      <div class="trl" id="trl3"></div>
+      <div class="trl" id="trl4" style="height:4px"></div>
+    </div>
+    <div class="bc-image" id="bcImage">
+      <div class="img-fill" id="imgFill"><div class="img-icon"></div></div>
+    </div>
+  </div>
+
+  <!-- 덱 -->
+  <div class="deck-container" id="deckContainer">
+    <!-- dc0: 제목 + 텍스트 + 하단 이미지 -->
+    <div class="deck-card" id="dc0">
+      <div class="dc-body">
+        <div class="dc-hbar" style="background:linear-gradient(90deg,rgba(108,62,215,0.58),rgba(62,128,228,0.46));width:55%"></div>
+        <div class="dc-line" style="width:82%"></div>
+        <div class="dc-line" style="width:68%"></div>
+        <div class="dc-line" style="width:74%"></div>
+        <div class="dc-img" style="background:linear-gradient(148deg,rgba(185,158,255,0.52),rgba(148,205,255,0.46))"></div>
+      </div>
+    </div>
+    <!-- dc1: 두 컬럼 레이아웃 -->
+    <div class="deck-card" id="dc1">
+      <div class="dc-body">
+        <div class="dc-hbar" style="background:linear-gradient(90deg,rgba(62,148,228,0.55),rgba(62,208,198,0.44));width:50%"></div>
+        <div class="dc-two">
+          <div class="dc-col" style="background:linear-gradient(150deg,rgba(112,178,248,0.22),rgba(88,208,218,0.14))"></div>
+          <div class="dc-col" style="background:linear-gradient(150deg,rgba(88,148,238,0.20),rgba(72,188,208,0.12))"></div>
+        </div>
+      </div>
+    </div>
+    <!-- dc2: 텍스트 위주 -->
+    <div class="deck-card" id="dc2">
+      <div class="dc-body">
+        <div class="dc-hbar" style="background:linear-gradient(90deg,rgba(148,88,228,0.52),rgba(198,88,198,0.40));width:62%"></div>
+        <div class="dc-line" style="width:90%"></div>
+        <div class="dc-line" style="width:76%"></div>
+        <div class="dc-line" style="width:84%"></div>
+        <div class="dc-line" style="width:64%"></div>
+        <div class="dc-line" style="width:78%"></div>
+      </div>
+    </div>
+    <!-- dc3: 이미지 상단 -->
+    <div class="deck-card" id="dc3">
+      <div class="dc-body">
+        <div class="dc-img" style="flex:0.52;background:linear-gradient(135deg,rgba(168,212,255,0.55),rgba(138,185,255,0.48),rgba(178,162,255,0.44))"></div>
+        <div style="margin-top:12px">
+          <div class="dc-hbar" style="background:linear-gradient(90deg,rgba(88,158,245,0.52),rgba(118,108,228,0.40));width:48%"></div>
+          <div class="dc-line" style="width:70%"></div>
+          <div class="dc-line" style="width:58%"></div>
+        </div>
+      </div>
+    </div>
+    <!-- dc4: 완성형 텍스트+이미지 (1,2단계와 유사) -->
+    <div class="deck-card" id="dc4">
+      <div class="dc-body">
+        <div class="dc-hbar" style="background:linear-gradient(90deg,rgba(118,72,210,0.56),rgba(72,132,228,0.45));width:60%"></div>
+        <div style="flex:1;display:flex;gap:12px;margin-top:6px;">
+          <div style="flex:1;display:flex;flex-direction:column;gap:7px;padding-top:1px;">
+            <div class="dc-line" style="width:88%"></div>
+            <div class="dc-line" style="width:72%"></div>
+            <div class="dc-line" style="width:92%"></div>
+            <div class="dc-line" style="width:64%"></div>
+            <div class="dc-line" style="width:78%;height:4px;"></div>
+          </div>
+          <div style="width:90px;flex-shrink:0;border-radius:9px;
+            background:linear-gradient(148deg,rgba(138,195,255,0.56),rgba(168,158,255,0.44));
+            box-shadow:0 1px 0 rgba(255,255,255,0.92) inset, 0 2px 8px rgba(88,128,228,0.14);
+            position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.22),transparent)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="particle-container" id="particleContainer"></div>
+</div>
+
+<script>
+const STAGE = 7000;
+const REPEAT = 3;
+
+// DOM
+const scene        = document.getElementById('scene');
+const baseSlide    = document.getElementById('baseSlide');
+const mcHeader     = document.getElementById('mcHeader');
+const mcBar        = document.getElementById('mcBar');
+const bcBody       = document.getElementById('bcBody');
+const bcText       = document.getElementById('bcText');
+const bcImage      = document.getElementById('bcImage');
+const imgFill      = document.getElementById('imgFill');
+const trlEls       = [0,1,2,3,4].map(i=>document.getElementById('trl'+i));
+const deckContainer= document.getElementById('deckContainer');
+const deckCards    = [0,1,2,3,4].map(i=>document.getElementById('dc'+i));
+const particleCont = document.getElementById('particleContainer');
+
+// easing
+const easeOut    = t => 1-Math.pow(1-t,3);
+const easeOut4   = t => 1-Math.pow(1-t,4);
+const easeOutExp = t => t===0 ? 0 : 1-Math.pow(2,-10*t);   // expo out — 빠른 초반, 부드러운 끝
+const easeInExp  = t => t===1 ? 1 : 1-Math.pow(2,-10*t);
+const easeOutB   = t => { const c=1.70158+1; return 1+c*Math.pow(t-1,3)+1.70158*Math.pow(t-1,2); };
+const easeOutB2  = t => { const c=2.5*1.5; return 1+c*Math.pow(t-1,3)+(c-1)*Math.pow(t-1,2); }; // gentler bounce
+const easeIO     = t => t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const easeInOut4 = t => t<.5?8*t*t*t*t:1-Math.pow(-2*t+2,4)/2;
+const easeIOExp  = t => t<.5 ? (1-Math.pow(2,-20*t))/2 : (Math.pow(2,-20*(t-.5))-Math.pow(2,-10))/2 + 0.5; // expo io
+const lerp       = (a,b,t) => a+(b-a)*t;
+
+// async utils
+const raf2  = fn => setTimeout(()=>fn(performance.now()),16);
+const waitMs= ms => new Promise(r=>setTimeout(r,ms));
+function animA(dur,ease,cb){
+  return new Promise(res=>{
+    const s=performance.now();
+    function f(n){ const t=Math.min((n-s)/dur,1); cb(ease(t),t); if(t<1)raf2(f); else res(); }
+    raf2(f);
+  });
+}
+
+// particle
+let particleFired=false, particleStyleOk=false;
+function fireParticles(){
+  if(particleFired)return; particleFired=true;
+  if(!particleStyleOk){
+    particleStyleOk=true;
+    const s=document.createElement('style');
+    s.textContent=`
+      @keyframes pA{0%{transform:translate(-50%,-50%) translate(0,0) scale(1);opacity:.95}100%{transform:translate(-50%,-50%) translate(var(--px),var(--py)) scale(0);opacity:0}}
+      @keyframes pB{0%{transform:translate(-50%,-50%) translate(0,0) scale(1) rotate(0deg);opacity:.90}100%{transform:translate(-50%,-50%) translate(var(--px),var(--py)) scale(0) rotate(180deg);opacity:0}}
+    `;
+    document.head.appendChild(s);
+  }
+  particleCont.innerHTML='';
+  const cols=['#b892e8','#8ac3f0','#dab8f8','#72ccde','#d0a8f8','#68d8a8','#f0b8d8','#a8e8d0'];
+  for(let i=0;i<28;i++){
+    const p=document.createElement('div');
+    const a=(i/28)*Math.PI*2 + (Math.random()-0.5)*0.4;
+    const d=48+Math.random()*68;
+    const col=cols[Math.floor(Math.random()*cols.length)];
+    const sz=2+Math.random()*6;
+    const isSquare=Math.random()<0.25;
+    const dur=0.65+Math.random()*0.55;
+    const delay=Math.random()*0.20;
+    const anim=isSquare?'pB':'pA';
+    p.style.cssText=`position:absolute;left:50%;top:50%;width:${sz}px;height:${sz}px;
+      border-radius:${isSquare?'2px':'50%'};
+      background:${col};opacity:0;
+      animation:${anim} ${dur}s ${delay}s ease-out forwards;
+      --px:${Math.cos(a)*d}px;--py:${Math.sin(a)*d}px`;
+    particleCont.appendChild(p);
+  }
+}
+
+// ── reset ──
+function resetMC(){
+  mcHeader.style.opacity='1';
+  mcBar.style.width='0%';
+  mcBar.classList.remove('filled');
+}
+function resetBC(){
+  bcBody.style.display='none';
+  bcBody.style.opacity='';
+  bcBody.style.transform='';
+  bcBody.style.transition='none';
+  imgFill.style.opacity='0';
+  trlEls.forEach(el=>{ el.style.width='0%'; });
+}
+function resetDeck(){
+  deckContainer.style.opacity='0';
+  deckCards.forEach((dc,i)=>{
+    dc.style.opacity='0';
+    dc.style.transform='translateZ(0) translateY(0) rotate(0deg)';
+    dc.style.zIndex=String(i+1);
+  });
+  particleFired=false;
+  particleCont.innerHTML='';
+}
+function resetAll(){
+  baseSlide.style.opacity='1';
+  resetMC();
+  resetBC();
+  resetDeck();
+}
+
+// ── Stage 0: MC 고정 + BC fly-in ──
+async function stage0Seq(){
+  // MC bar 채우기 — expo out으로 더 스냅감 있게
+  await animA(480,easeOutExp, e=>{ mcBar.style.width=(e*100)+'%'; });
+  mcBar.classList.add('filled'); // pulse glow 시작
+  await waitMs(320);
+
+  // 소스 카드 — 더 정교한 디자인
+  const PCW=118, PCH=78;
+  const pcX=560-PCW-24, pcY=430-PCH-24;
+
+  const src=document.createElement('div');
+  src.style.cssText=`position:absolute;left:${pcX}px;top:${pcY}px;width:${PCW}px;height:${PCH}px;border-radius:10px;
+    background:rgba(248,244,255,0.97);
+    border:1px solid rgba(255,255,255,0.95);
+    box-shadow:
+      0 12px 32px rgba(108,82,198,0.20),
+      0 4px 10px rgba(108,82,198,0.14),
+      0 1px 0 rgba(255,255,255,0.99) inset,
+      inset 0 -1px 0 rgba(108,82,198,0.06);
+    overflow:hidden;opacity:0;z-index:20;transition:none`;
+  src.innerHTML=`
+    <div style="position:absolute;inset:0;display:flex;">
+      <div style="flex:1;padding:9px 10px;display:flex;flex-direction:column;gap:5px;justify-content:center;
+        background:linear-gradient(160deg, rgba(248,244,255,0.95) 0%, rgba(238,230,255,0.88) 100%);">
+        <div style="height:3px;border-radius:2px;background:linear-gradient(90deg,rgba(108,82,198,0.32),rgba(82,132,228,0.22));width:90%"></div>
+        <div style="height:3px;border-radius:2px;background:rgba(108,82,198,0.18);width:76%"></div>
+        <div style="height:3px;border-radius:2px;background:rgba(108,82,198,0.14);width:84%"></div>
+        <div style="height:2px;border-radius:2px;background:rgba(108,82,198,0.10);width:62%"></div>
+      </div>
+      <div style="width:35%;
+        background:linear-gradient(150deg,rgba(148,210,255,0.62),rgba(118,188,248,0.72));
+        border-radius:0 10px 10px 0;flex-shrink:0;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.20),transparent)"></div>
+        <div style="position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:18px;height:14px;border:1.5px solid rgba(92,160,222,0.45);border-radius:3px;background:rgba(255,255,255,0.18);">
+          <div style="position:absolute;bottom:0;left:0;right:0;height:6px;background:linear-gradient(135deg,rgba(148,205,248,0.5),rgba(118,175,235,0.6));border-radius:0 0 2px 2px"></div>
+        </div>
+      </div>
+    </div>
+    <div style="position:absolute;top:5px;left:8px;font-size:5.5px;font-weight:700;color:rgba(108,85,200,0.35);letter-spacing:.06em;text-transform:uppercase">Content</div>
+  `;
+  scene.appendChild(src);
+
+  // 소스 카드 slide-down + fade-in
+  src.style.transform='translateY(-10px) scale(0.96)';
+  await animA(380,easeOutExp, e=>{
+    src.style.opacity=String(e);
+    src.style.transform=`translateY(${lerp(-10,0,e)}px) scale(${lerp(0.96,1,e)})`;
+  });
+  src.style.transform='';
+  await waitMs(240);
+
+  // highlight pulse — 더 정교한 glow
+  src.style.transition='box-shadow 0.18s ease, transform 0.18s ease';
+  src.style.boxShadow='0 0 0 2px rgba(128,88,218,0.50), 0 0 16px rgba(128,88,218,0.25), 0 12px 32px rgba(108,82,198,0.24), 0 1px 0 rgba(255,255,255,0.99) inset';
+  src.style.transform='scale(1.02)';
+  await waitMs(220);
+  src.style.boxShadow='0 12px 32px rgba(108,82,198,0.20), 0 4px 10px rgba(108,82,198,0.14), 0 1px 0 rgba(255,255,255,0.99) inset';
+  src.style.transform='scale(1)';
+  src.style.transition='none';
+  await waitMs(140);
+
+  // BC fly-in: 소스 카드 위치 → MC 바로 아래 착지
+  const BCW=360, BCH=196;
+  const tX=100, tY=139;
+  const sc0=PCW/BCW;
+
+  bcBody.style.display='flex';
+  bcBody.style.position='absolute';
+  bcBody.style.left='0'; bcBody.style.top='0';
+  bcBody.style.width=BCW+'px'; bcBody.style.height=BCH+'px';
+  bcBody.style.opacity='0';
+  bcBody.style.transformOrigin='center center';
+  bcBody.style.transform=`translate(${pcX-(BCW-PCW)/2}px,${pcY-(BCH-PCH)/2}px) scale(${sc0}) rotate(2deg)`;
+  bcBody.style.transition='none';
+  bcBody.style.zIndex='10';
+
+  const sx=pcX-(BCW-PCW)/2, sy=pcY-(BCH-PCH)/2;
+
+  // 소스 카드 fade-out 동시 진행
+  animA(480,easeOut, e=>{ src.style.opacity=String(1-e); });
+
+  // BC fly — expo out으로 스냅감 + 더 자연스러운 호 경로
+  await animA(700,easeOutExp,(e,t)=>{
+    const x=lerp(sx,tX,e);
+    // 경로: 먼저 약간 위로 올라갔다가 목표지점으로 떨어지는 느낌
+    const rawY=lerp(sy,tY,e);
+    const arc=-Math.sin(Math.PI*Math.pow(t,0.7))*38;
+    const y=rawY+arc;
+    const sc=lerp(sc0,1,easeOut4(e));
+    const rz=lerp(2,0,easeOutExp(e));
+    bcBody.style.transform=`translate(${x}px,${y}px) scale(${sc}) rotate(${rz}deg)`;
+    bcBody.style.opacity=String(Math.min(e*2.0,1));
+  });
+
+  // 착지 bounce — squash-and-stretch 효과
+  // squash: 가로 늘고 세로 줄기
+  await animA(120,t=>Math.sin(t*Math.PI),e=>{
+    bcBody.style.transform=`translate(${tX}px,${tY+e*3}px) scaleX(${1+e*0.030}) scaleY(${1-e*0.022}) rotate(0deg)`;
+  });
+  // stretch: 원래대로 + 살짝 위로
+  await animA(160,t=>Math.sin(t*Math.PI),e=>{
+    bcBody.style.transform=`translate(${tX}px,${tY-e*5}px) scaleX(${1-e*0.016}) scaleY(${1+e*0.018}) rotate(0deg)`;
+  });
+  // settle
+  await animA(90,t=>Math.sin(t*Math.PI)*0.5,e=>{
+    bcBody.style.transform=`translate(${tX}px,${tY+e*1.5}px) scale(${1+e*0.004}) rotate(0deg)`;
+  });
+  bcBody.style.transform=`translate(${tX}px,${tY}px) scale(1) rotate(0deg)`;
+
+  // 착지 glow flash — 빛 번쩍임 + 링 파동
+  bcBody.style.boxShadow='0 0 0 3px rgba(148,98,238,0.52), 0 0 24px rgba(128,82,218,0.28), 0 12px 36px rgba(118,72,198,0.26)';
+  await waitMs(60);
+  bcBody.style.transition='box-shadow 0.65s cubic-bezier(0.16,1,0.3,1)';
+  bcBody.style.boxShadow='0 0 0 0px rgba(148,98,238,0), 0 4px 16px rgba(118,72,198,0.10)';
+  await waitMs(200);
+  bcBody.style.transition='none';
+
+  src.remove();
+
+  // inline style 복원
+  bcBody.style.cssText='display:flex;opacity:1;transform:none;position:absolute;left:calc(50% - 180px);top:calc(50% - 76px);width:360px;height:196px';
+
+  await waitMs(2400);
+}
+
+async function runStage0(){
+  for(let i=0;i<REPEAT;i++){
+    resetAll();
+    await stage0Seq();
+    if(i<REPEAT-1){
+      await new Promise(res=>{
+        bcBody.style.transition='opacity 0.4s ease';
+        bcBody.style.opacity='0';
+        setTimeout(()=>{ bcBody.style.transition='none'; bcBody.style.display='none'; res(); },420);
+      });
+    }
+    if(i===REPEAT-1) break;
+    resetBC();
+  }
+  startStage1();
+}
+
+// ── Stage 1: MC+BC 콘텐츠 reveal ──
+function startStage1(){
+  majorStage=1; cycleCount=0;
+  bcBody.style.cssText='display:flex;opacity:1;transform:none;position:absolute;left:calc(50% - 180px);top:calc(50% - 76px);width:360px;height:196px';
+  mcBar.style.width='0%';
+  imgFill.style.opacity='0';
+  trlEls.forEach(el=>{ el.style.width='0%'; });
+  cycleStart=performance.now();
+  raf2(mainLoop);
+}
+
+function animStage1(el){
+  const t=el/STAGE;
+  baseSlide.style.opacity='1';
+  mcHeader.style.opacity='1';
+  bcBody.style.display='flex'; bcBody.style.opacity='1'; bcBody.style.transform='none';
+  // mc bar — expo out으로 더 스냅감 있게
+  mcBar.style.width=easeOutExp(Math.min(Math.max(t-0.02,0)/0.13,1))*100+'%';
+  // image fill — 더 빠르게 나타남
+  if(t>0.10) imgFill.style.opacity=String(easeOut4(Math.min((t-0.10)/0.18,1)));
+  // text lines — 더 빠른 stagger, 각 라인은 expo out
+  const d=[0.06,0.14,0.23,0.32,0.42], w=[88,72,92,62,78];
+  trlEls.forEach((el,i)=>{ if(t>d[i]) el.style.width=easeOutExp(Math.min((t-d[i])/0.16,1))*w[i]+'%'; });
+}
+
+// ── Stage 2: deck fan-out ──
+const fanAngles=[-26,-13,0,13,26];
+const fanX=[-52,-26,0,26,52];
+const cardZ=[-64,-48,-32,-16,0];
+const cardY=[-20,-15,-10,-5,0];
+
+function animStage2(el){
+  const t=el/STAGE;
+
+  // MC+BC+slide → deck cross-fade
+  if(t<0.22){
+    const f=easeOut(Math.min(t/0.22,1));
+    [mcHeader,bcBody,baseSlide].forEach(l=>{ l.style.opacity=String(lerp(1,0,f)); });
+  } else {
+    [mcHeader,bcBody,baseSlide].forEach(l=>{ l.style.opacity='0'; });
+  }
+
+  if(t>0.08){
+    deckContainer.style.opacity='1';
+    const dT=Math.min((t-0.08)/0.92,1);
+    const fanPeak=0.38, stackEnd=0.72;
+
+    deckCards.forEach((dc,i)=>{
+      const delay=i*0.045;
+      if(dT>delay){
+        dc.style.opacity=String(Math.min((dT-delay)/0.28*3.5,1));
+        let rx,ty,tz,rz;
+        if(dT<fanPeak){
+          const fT=easeOutB2(Math.min(dT/fanPeak,1));  // gentler bounce
+          rz=fanAngles[i]*fT; rx=fanX[i]*fT; ty=0; tz=0;
+        } else if(dT<stackEnd){
+          const sT=easeOutExp((dT-fanPeak)/(stackEnd-fanPeak));
+          rz=fanAngles[i]*(1-sT); rx=fanX[i]*(1-sT);
+          tz=cardZ[i]*sT; ty=cardY[i]*sT;
+        } else {
+          const fT=(dT-stackEnd)/(1-stackEnd);
+          const breathe=Math.sin(fT*Math.PI*2.2+i*0.28)*2.2;
+          rz=0; rx=0; tz=cardZ[i]; ty=cardY[i]+breathe*(1-i*0.15);
+          // breathe 시 그림자 동적 변화 (위로 올라갈수록 그림자 커지고 흐려짐)
+          if(i===4){
+            const shadowDepth=0.5+0.5*(breathe/2.2+1)/2;
+            dc.style.boxShadow=`
+              0 1px 0 rgba(255,255,255,0.98) inset,
+              0 ${12+shadowDepth*8}px ${28+shadowDepth*12}px rgba(108,82,198,${0.09+shadowDepth*0.05}),
+              0 ${6+shadowDepth*4}px ${14+shadowDepth*6}px rgba(92,112,198,${0.06+shadowDepth*0.03}),
+              inset 1px 0 0 rgba(255,255,255,0.55)
+            `;
+          }
+        }
+        dc.style.transform=`translateX(${rx}px) translateY(${ty}px) translateZ(${tz}px) rotate(${rz}deg)`;
+        dc.style.zIndex=String(i+1);
+        if(dT>stackEnd) fireParticles();
+      }
+    });
+  }
+}
+
+// ── main rAF loop (Stage1, Stage2) ──
+let majorStage=1, cycleCount=0, cycleStart=null, inTrans=false;
+
+function mainLoop(ts){
+  if(!cycleStart) cycleStart=ts;
+  const el=ts-cycleStart;
+
+  if(el>=STAGE && !inTrans){
+    inTrans=true;
+    cycleCount++;
+    if(majorStage===1){
+      if(cycleCount>=REPEAT){
+        bcBody.style.display='flex';
+        const layers=[mcHeader,bcBody,baseSlide];
+        animA(400,easeIO, e=>{
+          layers.forEach(l=>{ l.style.opacity=String(1-e); });
+        }).then(()=>{
+          layers.forEach(l=>{ l.style.transition='none'; });
+          bcBody.style.display='none';
+          majorStage=2; cycleCount=0;
+          resetDeck();
+          cycleStart=performance.now(); inTrans=false;
+        });
+      } else {
+        bcBody.style.display='flex'; bcBody.style.opacity='1';
+        mcBar.style.width='0%';
+        imgFill.style.opacity='0';
+        trlEls.forEach(el=>{ el.style.width='0%'; });
+        cycleStart=performance.now(); inTrans=false;
+      }
+    } else {
+      resetDeck();
+      cycleStart=performance.now(); inTrans=false;
+    }
+  }
+
+  if(!inTrans){
+    const cEl=Math.min(ts-cycleStart,STAGE);
+    if(majorStage===1) animStage1(cEl);
+    else animStage2(cEl);
+  }
+
+  if(document.hidden) setTimeout(()=>mainLoop(performance.now()),16);
+  else requestAnimationFrame(mainLoop);
+}
+
+// ── kick-off ──
+resetAll();
+runStage0();
+</script>
+</body>
+</html>
