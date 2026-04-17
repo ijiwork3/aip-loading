@@ -1138,24 +1138,12 @@ function s2BuildLayout(container, bcIdx){
 }
 
 function s2AnimLayout(container, bcIdx, t){
-  const innerDiv = container.querySelector('[style*="top:36px"]');
-  if(!innerDiv) return;
-
-  // 헤더 타이틀 바 0→100% 애니메이션
+  // 헤더 타이틀 바 0→76% 애니메이션 (innerDiv 유무와 무관하게 항상 실행)
   const mcBarEl = container.querySelector('.s2-mc-bar');
   if(mcBarEl) mcBarEl.style.width = easeOutExp(Math.min(t/0.55,1))*76+'%';
 
-  // 이미지 영역 슬라이드업 어포던스 (아래→위)
-  const imgEls = container.querySelectorAll('.bc-col-img,.bc-col-img2,.bc-image,[style*="rgba(168,195,255"],[style*="rgba(138,195,255"]');
-  imgEls.forEach(el=>{
-    // 부모에 overflow:hidden 보장
-    if(el.parentElement) el.parentElement.style.overflow='hidden';
-    const slideT = Math.min(t / 0.6, 1);
-    const eased = easeOutExp(slideT);
-    const yPct = (1 - eased) * 100; // 100% → 0% (아래서 위로)
-    el.style.transform = `translateY(${yPct}%)`;
-    el.style.opacity = String(Math.min(t / 0.3, 1)); // 살짝 페이드인도 함께
-  });
+  const innerDiv = container.querySelector('[style*="top:36px"]');
+  if(!innerDiv) return;
 
   // 텍스트 라인 애니메이션
   if(bcIdx===0){
