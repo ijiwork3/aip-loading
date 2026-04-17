@@ -1594,21 +1594,19 @@ function _startS3cycle(){
 function _startS2at(cycleIdx){
   majorStage=2; cycleCount=0;
   s2CycleIdx=cycleIdx;
-  // 1단계 레이어 숨기기 (mcBar 100% 노출 방지)
+  // 1단계 레이어 모두 숨기기
   [baseSlide,mcHeader,bcBody].forEach(l=>{ l.style.opacity='0'; });
-  // bcBody를 loop2 상태로 준비
-  loopIdx=2; setBCLayout(2);
-  const disp='block';
-  bcBody.style.cssText=`display:${disp};opacity:0;transform:none;position:absolute;left:calc(50% - 180px);top:calc(50% - 119px);width:360px;height:166px;overflow:hidden`;
-  setBCFull(2);
-  mcBar.style.width='76%';
-  // s2SetupCycle 먼저 (내부에서 s2Layer.opacity='0' 세팅됨)
+  // s2Layer 새로 생성 + 빌드 (opacity=0 상태)
   s2SetupCycle(cycleIdx);
-  // 그 후 opacity='1'로 바로 표시
-  s2Layer.style.opacity='1';
-  s2Layer.style.pointerEvents='none';
-  cycleStart=performance.now(); inTrans=false;
-  raf2(mainLoop);
+  inTrans=true;
+  // mainLoop 자동전환과 동일하게: 페이드인 완료 후 cycleStart 리셋
+  animA(FADE,easeOut, e=>{ s2Layer.style.opacity=String(e); }).then(()=>{
+    s2Layer.style.opacity='1';
+    s2Layer.style.pointerEvents='none';
+    setActiveBtn(['btn2a','btn2b1','btn2b2'][cycleIdx]);
+    cycleStart=performance.now(); inTrans=false;
+    raf2(mainLoop);
+  });
 }
 
 
@@ -1626,11 +1624,6 @@ function applyDarkS2(){
   s2Layer.style.border = 'none';
 }
 
-const origS2Setup = s2SetupCycle;
-function s2SetupCycleWrapped(idx){
-  origS2Setup(idx);
-  applyDarkS2();
-}
 
 const DARK_BG  = 'rgba(34,26,58,0.97)';
 const LIGHT_BG = 'rgba(255,255,255,0.97)';
@@ -1660,7 +1653,7 @@ const _origSetBCLayout = setBCLayout;
 setBCLayout = function(idx){ _origSetBCLayout(idx); if(isDark) applyDarkBCInner(bcBody); };
 
 const _origS2Setup = s2SetupCycle;
-s2SetupCycle = function(idx){ _origS2Setup(idx); applyDarkS2(); applyDarkBCInner(s2Layer); };
+s2SetupCycle = function(idx){ _origS2Setup(idx); applyDarkS2(); };
 
 // kick-off
 resetAll();
