@@ -454,45 +454,63 @@ body.dark .bc-body {
 /* 썸네일 공통 MC */
 .t-mc {
   height:9px; display:flex; align-items:center; padding:0 5px; gap:3px;
-  background:linear-gradient(90deg,rgba(218,208,255,0.80),rgba(200,220,255,0.72));
   flex-shrink:0;
 }
-.t-mc-gem { width:3px;height:3px;background:rgba(138,105,218,0.45);transform:rotate(45deg);flex-shrink:0; }
-.t-mc-bar { flex:1;height:3px;border-radius:1.5px;background:linear-gradient(90deg,rgba(122,82,215,0.50),rgba(82,132,228,0.34)); }
+.t-mc-gem { width:3px;height:3px;transform:rotate(45deg);flex-shrink:0; }
+.t-mc-bar { flex:1;height:3px;border-radius:1.5px; }
 .t-mc-dots { display:flex;gap:2px; }
-.t-mc-dots span { width:2px;height:2px;border-radius:50%;background:rgba(138,105,218,0.22); }
+.t-mc-dots span { width:2px;height:2px;border-radius:50%; }
 
 /* 썸네일 BC 공통 래퍼 */
 .t-bc { flex:1; display:flex; overflow:hidden; min-height:0; }
 
-/* ── thumb0: 텍스트 좌 + 이미지 우 (메인BC와 동일) ── */
-.t0-text { flex:1;padding:5px 4px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
-.t0-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.16));flex-shrink:0; }
-.t0-img { width:26px;flex-shrink:0;background:linear-gradient(145deg,rgba(138,195,255,0.68),rgba(128,155,245,0.68));position:relative; }
-.t0-img::before { content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.22),transparent); }
+/* ── thumb0 (노랑): 텍스트 위주 ── */
+#thumb0 .t-mc { background:linear-gradient(90deg,rgba(255,225,130,0.82),rgba(255,210,80,0.68)); }
+#thumb0 .t-mc-gem { background:rgba(200,150,20,0.50); }
+#thumb0 .t-mc-bar { background:linear-gradient(90deg,rgba(200,150,20,0.55),rgba(230,180,30,0.38)); }
+#thumb0 .t-mc-dots span { background:rgba(200,150,20,0.24); }
+.t4-text { flex:1;padding:5px 5px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
+.t4-title { height:3px;border-radius:1.5px;background:linear-gradient(90deg,rgba(190,135,10,0.50),rgba(220,170,20,0.32));flex-shrink:0; }
+.t4-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(200,150,20,0.28),rgba(220,170,20,0.16));flex-shrink:0; }
+.t4-divider { height:1px;background:linear-gradient(90deg,transparent,rgba(200,160,20,0.18),transparent);flex-shrink:0; }
 
-/* ── thumb1: 상단 이미지 + 하단 텍스트 ── */
-.t1-img { height:20px;background:linear-gradient(135deg,rgba(168,212,255,0.55),rgba(178,162,255,0.44));position:relative;flex-shrink:0; }
-.t1-img::before { content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.20),transparent); }
+/* ── thumb1 (빨강): 상단 이미지 + 하단 텍스트 ── */
+#thumb1 .t-mc { background:linear-gradient(90deg,rgba(255,185,185,0.82),rgba(255,155,155,0.68)); }
+#thumb1 .t-mc-gem { background:rgba(200,60,60,0.50); }
+#thumb1 .t-mc-bar { background:linear-gradient(90deg,rgba(200,60,60,0.55),rgba(230,90,90,0.38)); }
+#thumb1 .t-mc-dots span { background:rgba(200,60,60,0.24); }
+.t1-img { height:20px;background:linear-gradient(135deg,rgba(255,175,175,0.62),rgba(248,130,130,0.50));position:relative;flex-shrink:0; }
+.t1-img::before { content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.22),transparent); }
 .t1-text { flex:1;padding:4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
-.t1-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.26),rgba(98,118,210,0.15));flex-shrink:0; }
+.t1-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(200,60,60,0.28),rgba(220,90,90,0.16));flex-shrink:0; }
 
-/* ── thumb2: 2컬럼 ── */
+/* ── thumb2 (파랑): 2컬럼 ── */
+#thumb2 .t-mc { background:linear-gradient(90deg,rgba(165,205,255,0.84),rgba(130,185,255,0.70)); }
+#thumb2 .t-mc-gem { background:rgba(40,100,210,0.50); }
+#thumb2 .t-mc-bar { background:linear-gradient(90deg,rgba(40,100,210,0.55),rgba(60,130,240,0.38)); }
+#thumb2 .t-mc-dots span { background:rgba(40,100,210,0.24); }
 .t2-cols { flex:1;display:flex;gap:0;background:transparent; }
 .t2-col { flex:1;padding:5px 4px;display:flex;flex-direction:column;gap:2.5px; }
-.t2-col:first-child { }
-.t2-col-img { border-radius:4px;background:linear-gradient(145deg,rgba(138,195,255,0.55),rgba(155,145,248,0.45));flex:1; }
-.t2-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.24),rgba(98,118,210,0.13));flex-shrink:0; }
+.t2-col-img { border-radius:4px;background:linear-gradient(145deg,rgba(110,175,255,0.60),rgba(80,145,245,0.50));flex:1; }
+.t2-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(40,100,210,0.28),rgba(60,130,240,0.16));flex-shrink:0; }
 
-/* ── thumb3: 큰 이미지 전면 ── */
-.t3-bigimg { flex:1;background:rgba(168,195,255,0.52);border-radius:5px; }
-.t3-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.16));flex-shrink:0; }
+/* ── thumb3 (주황): 큰 이미지 전면 ── */
+#thumb3 .t-mc { background:linear-gradient(90deg,rgba(255,200,140,0.84),rgba(255,170,90,0.70)); }
+#thumb3 .t-mc-gem { background:rgba(210,110,20,0.50); }
+#thumb3 .t-mc-bar { background:linear-gradient(90deg,rgba(210,110,20,0.55),rgba(240,140,30,0.38)); }
+#thumb3 .t-mc-dots span { background:rgba(210,110,20,0.24); }
+.t3-bigimg { flex:1;background:linear-gradient(135deg,rgba(255,195,120,0.62),rgba(255,160,70,0.52));border-radius:5px; }
+.t3-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(210,110,20,0.28),rgba(240,140,30,0.16));flex-shrink:0; }
 
-/* ── thumb4: 텍스트 위주 ── */
-.t4-text { flex:1;padding:5px 5px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
-.t4-title { height:3px;border-radius:1.5px;background:linear-gradient(90deg,rgba(108,68,205,0.44),rgba(82,122,218,0.30));flex-shrink:0; }
-.t4-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.22),rgba(98,118,210,0.13));flex-shrink:0; }
-.t4-divider { height:1px;background:linear-gradient(90deg,transparent,rgba(148,108,228,0.14),transparent);flex-shrink:0; }
+/* ── thumb4 (초록): 텍스트 좌 + 이미지 우 ── */
+#thumb4 .t-mc { background:linear-gradient(90deg,rgba(165,230,180,0.84),rgba(120,210,145,0.70)); }
+#thumb4 .t-mc-gem { background:rgba(30,140,70,0.50); }
+#thumb4 .t-mc-bar { background:linear-gradient(90deg,rgba(30,140,70,0.55),rgba(50,170,90,0.38)); }
+#thumb4 .t-mc-dots span { background:rgba(30,140,70,0.24); }
+.t0-text { flex:1;padding:5px 4px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
+.t0-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(30,140,70,0.28),rgba(50,170,90,0.16));flex-shrink:0; }
+.t0-img { width:26px;flex-shrink:0;background:linear-gradient(145deg,rgba(120,210,145,0.68),rgba(80,190,115,0.58));position:relative; }
+.t0-img::before { content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.22),transparent); }
 </style>
 </head>
 <body>
