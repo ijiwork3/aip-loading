@@ -464,15 +464,15 @@ body.dark .bc-body {
 /* 썸네일 BC 공통 래퍼 */
 .t-bc { flex:1; display:flex; overflow:hidden; min-height:0; }
 
-/* ── thumb0 (노랑): 텍스트 위주 ── */
-#thumb0 .t-mc { background:linear-gradient(90deg,rgba(255,225,130,0.82),rgba(255,210,80,0.68)); }
-#thumb0 .t-mc-gem { background:rgba(200,150,20,0.50); }
-#thumb0 .t-mc-bar { background:linear-gradient(90deg,rgba(200,150,20,0.55),rgba(230,180,30,0.38)); }
-#thumb0 .t-mc-dots span { background:rgba(200,150,20,0.24); }
+/* ── thumb0 (파랑): 텍스트 위주 ── */
+#thumb0 .t-mc { background:linear-gradient(90deg,rgba(165,205,255,0.84),rgba(130,185,255,0.70)); }
+#thumb0 .t-mc-gem { background:rgba(40,100,210,0.50); }
+#thumb0 .t-mc-bar { background:linear-gradient(90deg,rgba(40,100,210,0.55),rgba(60,130,240,0.38)); }
+#thumb0 .t-mc-dots span { background:rgba(40,100,210,0.24); }
 .t4-text { flex:1;padding:5px 5px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
-.t4-title { height:3px;border-radius:1.5px;background:linear-gradient(90deg,rgba(190,135,10,0.50),rgba(220,170,20,0.32));flex-shrink:0; }
-.t4-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(200,150,20,0.28),rgba(220,170,20,0.16));flex-shrink:0; }
-.t4-divider { height:1px;background:linear-gradient(90deg,transparent,rgba(200,160,20,0.18),transparent);flex-shrink:0; }
+.t4-title { height:3px;border-radius:1.5px;background:linear-gradient(90deg,rgba(40,100,210,0.50),rgba(60,130,240,0.32));flex-shrink:0; }
+.t4-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(40,100,210,0.28),rgba(60,130,240,0.16));flex-shrink:0; }
+.t4-divider { height:1px;background:linear-gradient(90deg,transparent,rgba(40,100,210,0.18),transparent);flex-shrink:0; }
 
 /* ── thumb1 (빨강): 상단 이미지 + 하단 텍스트 ── */
 #thumb1 .t-mc { background:linear-gradient(90deg,rgba(255,185,185,0.82),rgba(255,155,155,0.68)); }
@@ -484,15 +484,15 @@ body.dark .bc-body {
 .t1-text { flex:1;padding:4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
 .t1-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(200,60,60,0.28),rgba(220,90,90,0.16));flex-shrink:0; }
 
-/* ── thumb2 (파랑): 2컬럼 ── */
-#thumb2 .t-mc { background:linear-gradient(90deg,rgba(165,205,255,0.84),rgba(130,185,255,0.70)); }
-#thumb2 .t-mc-gem { background:rgba(40,100,210,0.50); }
-#thumb2 .t-mc-bar { background:linear-gradient(90deg,rgba(40,100,210,0.55),rgba(60,130,240,0.38)); }
-#thumb2 .t-mc-dots span { background:rgba(40,100,210,0.24); }
+/* ── thumb2 (노랑): 2컬럼 ── */
+#thumb2 .t-mc { background:linear-gradient(90deg,rgba(255,225,130,0.82),rgba(255,210,80,0.68)); }
+#thumb2 .t-mc-gem { background:rgba(200,150,20,0.50); }
+#thumb2 .t-mc-bar { background:linear-gradient(90deg,rgba(200,150,20,0.55),rgba(230,180,30,0.38)); }
+#thumb2 .t-mc-dots span { background:rgba(200,150,20,0.24); }
 .t2-cols { flex:1;display:flex;gap:0;background:transparent; }
 .t2-col { flex:1;padding:5px 4px;display:flex;flex-direction:column;gap:2.5px; }
-.t2-col-img { border-radius:4px;background:linear-gradient(145deg,rgba(110,175,255,0.60),rgba(80,145,245,0.50));flex:1; }
-.t2-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(40,100,210,0.28),rgba(60,130,240,0.16));flex-shrink:0; }
+.t2-col-img { border-radius:4px;background:linear-gradient(145deg,rgba(255,220,100,0.62),rgba(240,190,40,0.52));flex:1; }
+.t2-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(200,150,20,0.28),rgba(230,180,30,0.16));flex-shrink:0; }
 
 /* ── thumb3 (주황): 큰 이미지 전면 ── */
 #thumb3 .t-mc { background:linear-gradient(90deg,rgba(255,200,140,0.84),rgba(255,170,90,0.70)); }
@@ -832,22 +832,22 @@ const bcLayouts = [
         <div style="flex:1;padding:12px 10px 12px 14px;display:flex;flex-direction:column;gap:8px;
           background:transparent;">
           <div class="bc-col-img s2-img-fade" style="flex:0.9;border-radius:8px;
-            background:linear-gradient(145deg,rgba(110,175,255,0.65),rgba(80,145,245,0.55));
+            background:linear-gradient(145deg,rgba(255,220,100,0.65),rgba(240,190,40,0.55));
             position:relative;overflow:hidden;">
             <div style="position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.24),transparent)"></div>
           </div>
-          <div class="bc-col-l1" style="height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.16));width:0%"></div>
-          <div class="bc-col-l2" style="height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(118,82,210,0.20),rgba(98,118,210,0.12));width:0%"></div>
+          <div class="bc-col-l1" style="height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(200,150,20,0.32),rgba(230,180,30,0.20));width:0%"></div>
+          <div class="bc-col-l2" style="height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(200,150,20,0.22),rgba(230,180,30,0.14));width:0%"></div>
         </div>
         <div style="flex:1;padding:12px 14px 12px 10px;display:flex;flex-direction:column;gap:8px;
           background:transparent;">
           <div class="bc-col-img2 s2-img-fade" style="flex:0.9;border-radius:8px;
-            background:linear-gradient(145deg,rgba(80,145,245,0.60),rgba(60,120,235,0.50));
+            background:linear-gradient(145deg,rgba(240,200,60,0.60),rgba(255,215,30,0.50));
             position:relative;overflow:hidden;">
             <div style="position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.22),transparent)"></div>
           </div>
-          <div class="bc-col-l3" style="height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(118,82,210,0.26),rgba(98,118,210,0.14));width:0%"></div>
-          <div class="bc-col-l4" style="height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(118,82,210,0.18),rgba(98,118,210,0.10));width:0%"></div>
+          <div class="bc-col-l3" style="height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(200,150,20,0.28),rgba(230,180,30,0.18));width:0%"></div>
+          <div class="bc-col-l4" style="height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(200,150,20,0.20),rgba(230,180,30,0.12));width:0%"></div>
         </div>
       </div>`,
     animate(t) {
@@ -870,13 +870,13 @@ const bcLayouts = [
         <div class="s2-img-fade" style="flex:0 0 80px;border-radius:10px;overflow:hidden;
           background:linear-gradient(135deg,rgba(255,195,120,0.65),rgba(255,160,70,0.55));margin-bottom:12px;"></div>
         <div class="bc-big-l1" style="height:7px;border-radius:3px;
-          background:linear-gradient(90deg,rgba(108,68,205,0.44),rgba(82,122,218,0.30));
+          background:linear-gradient(90deg,rgba(210,110,20,0.50),rgba(240,140,30,0.34));
           width:0%;margin-bottom:10px"></div>
         <div class="bc-big-l2" style="height:6px;border-radius:3px;
-          background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.18));
+          background:linear-gradient(90deg,rgba(210,110,20,0.32),rgba(240,140,30,0.22));
           width:0%;margin-bottom:8px"></div>
         <div class="bc-big-l3" style="height:5px;border-radius:3px;
-          background:linear-gradient(90deg,rgba(118,82,210,0.20),rgba(98,118,210,0.12));
+          background:linear-gradient(90deg,rgba(210,110,20,0.22),rgba(240,140,30,0.14));
           width:0%"></div>
       </div>`,
     animate(t) {
@@ -896,10 +896,10 @@ const bcLayouts = [
       <div style="position:absolute;inset:0;display:flex;
         background:transparent;">
         <div style="flex:1;padding:18px 14px 16px 18px;display:flex;flex-direction:column;gap:9px;">
-          <div class="bc-txt-l0" style="height:7px;border-radius:3px;width:0%;background:linear-gradient(90deg,rgba(108,68,205,0.44),rgba(82,122,218,0.30));"></div>
-          <div class="bc-txt-l1" style="height:6px;border-radius:3px;width:0%;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.18));"></div>
-          <div class="bc-txt-l2" style="height:6px;border-radius:3px;width:0%;background:linear-gradient(90deg,rgba(118,82,210,0.22),rgba(98,118,210,0.14));"></div>
-          <div class="bc-txt-l3" style="height:6px;border-radius:3px;width:0%;background:linear-gradient(90deg,rgba(118,82,210,0.18),rgba(98,118,210,0.10));"></div>
+          <div class="bc-txt-l0" style="height:7px;border-radius:3px;width:0%;background:linear-gradient(90deg,rgba(30,140,70,0.50),rgba(50,170,90,0.34));"></div>
+          <div class="bc-txt-l1" style="height:6px;border-radius:3px;width:0%;background:linear-gradient(90deg,rgba(30,140,70,0.32),rgba(50,170,90,0.22));"></div>
+          <div class="bc-txt-l2" style="height:6px;border-radius:3px;width:0%;background:linear-gradient(90deg,rgba(30,140,70,0.24),rgba(50,170,90,0.16));"></div>
+          <div class="bc-txt-l3" style="height:6px;border-radius:3px;width:0%;background:linear-gradient(90deg,rgba(30,140,70,0.18),rgba(50,170,90,0.12));"></div>
         </div>
         <div style="width:134px;flex-shrink:0;padding:12px 14px 12px 0;">
           <div class="s2-img-fade" style="width:100%;height:100%;border-radius:10px;overflow:hidden;
