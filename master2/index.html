@@ -464,32 +464,34 @@ body.dark .bc-body {
 /* 썸네일 BC 공통 래퍼 */
 .t-bc { flex:1; display:flex; overflow:hidden; min-height:0; }
 
-/* ── thumb0 (파랑): 텍스트 위주 ── */
-.t4-text { flex:1;padding:5px 5px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
-.t4-title { height:3px;border-radius:1.5px;background:linear-gradient(90deg,rgba(40,100,210,0.50),rgba(60,130,240,0.32));flex-shrink:0; }
-.t4-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(40,100,210,0.28),rgba(60,130,240,0.16));flex-shrink:0; }
-.t4-divider { height:1px;background:linear-gradient(90deg,transparent,rgba(40,100,210,0.18),transparent);flex-shrink:0; }
+/* ── 썸네일 내부 요소 전체 보라 계열 ── */
 
-/* ── thumb1 (빨강): 상단 이미지 + 하단 텍스트 ── */
-.t1-img { height:20px;background:linear-gradient(135deg,rgba(255,175,175,0.62),rgba(248,130,130,0.50));position:relative;flex-shrink:0; }
+/* thumb0: 텍스트 위주 */
+.t4-text { flex:1;padding:5px 5px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
+.t4-title { height:3px;border-radius:1.5px;background:linear-gradient(90deg,rgba(108,68,205,0.50),rgba(82,122,218,0.32));flex-shrink:0; }
+.t4-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.16));flex-shrink:0; }
+.t4-divider { height:1px;background:linear-gradient(90deg,transparent,rgba(138,105,218,0.18),transparent);flex-shrink:0; }
+
+/* thumb1: 이미지 + 텍스트 */
+.t1-img { height:20px;background:linear-gradient(135deg,rgba(168,195,255,0.60),rgba(178,162,255,0.50));position:relative;flex-shrink:0; }
 .t1-img::before { content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.22),transparent); }
 .t1-text { flex:1;padding:4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
-.t1-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(200,60,60,0.28),rgba(220,90,90,0.16));flex-shrink:0; }
+.t1-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.16));flex-shrink:0; }
 
-/* ── thumb2 (노랑): 2컬럼 ── */
+/* thumb2: 2컬럼 */
 .t2-cols { flex:1;display:flex;gap:0;background:transparent; }
 .t2-col { flex:1;padding:5px 4px;display:flex;flex-direction:column;gap:2.5px; }
-.t2-col-img { border-radius:4px;background:linear-gradient(145deg,rgba(255,220,100,0.62),rgba(240,190,40,0.52));flex:1; }
-.t2-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(200,150,20,0.28),rgba(230,180,30,0.16));flex-shrink:0; }
+.t2-col-img { border-radius:4px;background:linear-gradient(145deg,rgba(138,195,255,0.58),rgba(155,145,248,0.48));flex:1; }
+.t2-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.26),rgba(98,118,210,0.15));flex-shrink:0; }
 
-/* ── thumb3 (주황): 큰 이미지 전면 ── */
-.t3-bigimg { flex:1;background:linear-gradient(135deg,rgba(255,195,120,0.65),rgba(255,160,70,0.55));border-radius:5px; }
-.t3-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(210,110,20,0.28),rgba(240,140,30,0.16));flex-shrink:0; }
+/* thumb3: 큰 이미지 */
+.t3-bigimg { flex:1;background:linear-gradient(135deg,rgba(168,195,255,0.58),rgba(178,162,255,0.50));border-radius:5px; }
+.t3-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.16));flex-shrink:0; }
 
-/* ── thumb4 (초록): 텍스트 좌 + 이미지 우 ── */
+/* thumb4: 텍스트 + 이미지 */
 .t0-text { flex:1;padding:5px 4px 4px 5px;display:flex;flex-direction:column;gap:2.5px;background:transparent; }
-.t0-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(30,140,70,0.28),rgba(50,170,90,0.16));flex-shrink:0; }
-.t0-img { width:26px;flex-shrink:0;background:linear-gradient(145deg,rgba(120,210,145,0.68),rgba(80,190,115,0.58));position:relative; }
+.t0-line { border-radius:1.5px;background:linear-gradient(90deg,rgba(118,82,210,0.28),rgba(98,118,210,0.16));flex-shrink:0; }
+.t0-img { width:26px;flex-shrink:0;background:linear-gradient(145deg,rgba(138,195,255,0.65),rgba(155,145,248,0.55));position:relative; }
 .t0-img::before { content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.22),transparent); }
 </style>
 </head>
