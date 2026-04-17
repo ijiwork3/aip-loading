@@ -813,7 +813,7 @@ const bcLayouts = [
       <div class="bc-cols" style="flex:1;display:flex;gap:0;overflow:hidden;">
         <div style="flex:1;padding:12px 10px 12px 14px;display:flex;flex-direction:column;gap:8px;
           background:transparent;">
-          <div class="bc-col-img" style="flex:0.9;border-radius:8px;
+          <div class="bc-col-img s2-img-fade" style="flex:0.9;border-radius:8px;
             background:linear-gradient(145deg,rgba(138,195,255,0.60),rgba(155,145,248,0.50));
             position:relative;overflow:hidden;">
             <div style="position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.24),transparent)"></div>
@@ -823,7 +823,7 @@ const bcLayouts = [
         </div>
         <div style="flex:1;padding:12px 14px 12px 10px;display:flex;flex-direction:column;gap:8px;
           background:transparent;">
-          <div class="bc-col-img2" style="flex:0.9;border-radius:8px;
+          <div class="bc-col-img2 s2-img-fade" style="flex:0.9;border-radius:8px;
             background:linear-gradient(145deg,rgba(168,195,255,0.55),rgba(128,175,248,0.46));
             position:relative;overflow:hidden;">
             <div style="position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.22),transparent)"></div>
@@ -849,7 +849,7 @@ const bcLayouts = [
     thumbIdx: 3,
     html: `
       <div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:12px 14px 14px;">
-        <div style="flex:0 0 80px;border-radius:10px;overflow:hidden;
+        <div class="s2-img-fade" style="flex:0 0 80px;border-radius:10px;overflow:hidden;
           background:rgba(168,195,255,0.52);margin-bottom:12px;"></div>
         <div class="bc-big-l1" style="height:7px;border-radius:3px;
           background:linear-gradient(90deg,rgba(108,68,205,0.44),rgba(82,122,218,0.30));
@@ -884,7 +884,7 @@ const bcLayouts = [
           <div class="bc-txt-l3" style="height:6px;border-radius:3px;width:0%;background:linear-gradient(90deg,rgba(118,82,210,0.18),rgba(98,118,210,0.10));"></div>
         </div>
         <div style="width:134px;flex-shrink:0;padding:12px 14px 12px 0;">
-          <div style="width:100%;height:100%;border-radius:10px;overflow:hidden;
+          <div class="s2-img-fade" style="width:100%;height:100%;border-radius:10px;overflow:hidden;
             background:linear-gradient(145deg,rgba(138,195,255,0.68) 0%,rgba(108,175,252,0.75) 30%,rgba(128,155,245,0.68) 65%,rgba(155,145,248,0.62) 100%);
             background-size:200% 200%;animation:imgBgAnim 6s ease-in-out infinite;
             position:relative;">
@@ -1095,57 +1095,65 @@ function animStage1(elapsed){
 // 2-a: Stage1 마지막 프레임 유지 → 텍스트 타이핑 → 페이드아웃
 // 2-b: 새 슬라이드 페이드인 → 텍스트/이미지 타이핑 → 페이드아웃
 
-// s2 전용 슬라이드 레이어 — base-slide와 동일 크기/위치, z-index 높게
-const s2Layer = document.createElement('div');
-s2Layer.id = 's2Layer';
-s2Layer.style.cssText = `
-  position:absolute;
-  width:432px;height:242px;
-  top:calc(50% - 155px);left:calc(50% - 216px);
-  border-radius:16px;overflow:hidden;
-  background:linear-gradient(155deg,rgba(255,254,255,0.97),rgba(251,248,255,0.95),rgba(249,253,255,0.96));
-  box-shadow:0 1px 0 rgba(255,255,255,0.99) inset,0 20px 60px rgba(108,82,198,0.10);
-  border:none;
-  opacity:0;z-index:10;pointer-events:none;
-  backdrop-filter:blur(40px) saturate(2.1);
-  -webkit-backdrop-filter:blur(40px) saturate(2.1);
-`;
-document.getElementById('scene').appendChild(s2Layer);
+// ── Stage2 슬라이드 빌드 ──
+// s2Layer를 매 사이클마다 완전히 새로 생성해서 DOM에 교체 → 이전 스타일 잔존 완전 차단
+let s2Layer = null;
 
-// ── Stage2 슬라이드 빌드: bcLayouts[idx] HTML을 그대로 재사용 ──
-// MC 헤더(24px) + BC 콘텐츠를 s2Layer에 통합
-function getS2McHtml(){
-  return `
-  <div style="position:absolute;top:0;left:0;right:0;height:36px;
-    display:flex;align-items:center;padding:0 16px;
-    background:transparent;">
-    <div class="s2-mc-bar" style="height:8px;border-radius:4px;width:0%;flex-shrink:0;
-      background:linear-gradient(90deg,rgba(108,68,205,0.55),rgba(82,132,228,0.38));
-      transition:none;overflow:hidden;position:relative;">
-    </div>
-  </div>`;
+function createS2Layer(){
+  // 기존 s2Layer 제거
+  const old = document.getElementById('s2Layer');
+  if(old) old.parentNode.removeChild(old);
+
+  const el = document.createElement('div');
+  el.id = 's2Layer';
+  el.style.cssText = `
+    position:absolute;
+    width:432px;height:242px;
+    top:calc(50% - 155px);left:calc(50% - 216px);
+    border-radius:16px;overflow:hidden;
+    background:linear-gradient(155deg,rgba(254,252,255,0.97),rgba(248,244,255,0.94),rgba(244,249,255,0.95));
+    box-shadow:inset 0 0 12px 2px rgba(226,235,245,1.0),0 20px 60px rgba(108,82,198,0.10);
+    border:none;
+    opacity:0;z-index:10;pointer-events:none;
+    backdrop-filter:blur(40px) saturate(2.1);
+    -webkit-backdrop-filter:blur(40px) saturate(2.1);
+  `;
+  document.getElementById('scene').appendChild(el);
+  s2Layer = el;
+  return el;
 }
 
 function s2BuildLayout(container, bcIdx){
-  // bcLayouts[bcIdx]의 HTML을 MC 헤더 아래에 배치
-  const bcHtml = bcLayouts[bcIdx].html;
   const isBlock = (bcIdx===1||bcIdx===2);
-  container.innerHTML = getS2McHtml() + `
-    <div style="position:absolute;top:36px;left:0;right:0;bottom:0;
-      display:${isBlock?'block':'flex'};overflow:hidden;">
-      ${bcHtml}
-    </div>`;
+  const bcHtml = bcLayouts[bcIdx].html;
+
+  container.innerHTML = `
+  <div style="position:absolute;top:0;left:0;right:0;height:36px;
+    display:flex;align-items:center;padding:0 16px;background:transparent;">
+    <div class="s2-mc-bar" style="height:8px;border-radius:4px;width:0%;flex-shrink:0;
+      background:linear-gradient(90deg,rgba(108,68,205,0.55),rgba(82,132,228,0.38));
+      transition:none;overflow:hidden;position:relative;"></div>
+  </div>
+  <div style="position:absolute;top:36px;left:0;right:0;bottom:0;
+    display:${isBlock?'block':'flex'};overflow:hidden;">
+    ${bcHtml}
+  </div>`;
+
+  // 이미지 요소 초기 opacity:0 세팅 (HTML에 s2-img-fade 클래스로 마킹됨)
+  container.querySelectorAll('.s2-img-fade').forEach(el=>{ el.style.opacity='0'; });
 }
 
 function s2AnimLayout(container, bcIdx, t){
-  // 헤더 타이틀 바 0→76% 애니메이션 (innerDiv 유무와 무관하게 항상 실행)
+  // 1. 헤더 타이틀 바: 0 → 76%
   const mcBarEl = container.querySelector('.s2-mc-bar');
   if(mcBarEl) mcBarEl.style.width = easeOutExp(Math.min(t/0.55,1))*76+'%';
 
-  const innerDiv = container.querySelector('[style*="top:36px"]');
-  if(!innerDiv) return;
+  // 2. 이미지 페이드인: opacity 0 → 1 (t=0~0.4 구간)
+  const imgEls = container.querySelectorAll('.s2-img-fade');
+  const imgOpacity = Math.min(t/0.4, 1);
+  imgEls.forEach(el=>{ el.style.opacity = String(imgOpacity); });
 
-  // 텍스트 라인 애니메이션
+  // 3. 텍스트 라인 애니메이션
   if(bcIdx===0){
     const cls=['bc-col-l1','bc-col-l2','bc-col-l3','bc-col-l4'];
     const ws=[80,62,72,88]; const ds=[0.03,0.14,0.25,0.36];
@@ -1176,27 +1184,18 @@ let s2AnimFn=null;
 
 function s2SetupCycle(idx){
   s2AnimFn=null;
-  s2Layer.innerHTML='';
-  // s2Layer 기본 스타일 복원
-  s2Layer.style.height='242px';
-  s2Layer.style.width='432px';
-  s2Layer.style.left='calc(50% - 216px)';
-  s2Layer.style.top='calc(50% - 155px)';
-  s2Layer.style.background='linear-gradient(155deg,rgba(254,252,255,0.97),rgba(248,244,255,0.94),rgba(244,249,255,0.95))';
-  s2Layer.style.boxShadow='inset 0 0 12px 2px rgba(226,235,245,1.0),0 20px 60px rgba(108,82,198,0.10)';
-  s2Layer.style.border='none';
-  s2Layer.style.backdropFilter='blur(40px) saturate(2.1)';
-  s2Layer.style.webkitBackdropFilter='blur(40px) saturate(2.1)';
 
-  // 모든 사이클: s2Layer가 슬라이드 전담, bcBody/baseSlide/mcHeader 숨기기
+  // s2Layer 완전히 새로 생성 → 이전 스타일/내용 잔존 없음
+  createS2Layer();
+
+  // 1단계 레이어 숨기기
   baseSlide.style.opacity='0';
   mcHeader.style.opacity='0';
   bcBody.style.opacity='0';
 
-  // idx % 3 → bcLayouts 인덱스와 동일 (2-a=0, 2-b1=1, 2-b2=2)
   const bcIdx = idx % 3;
   s2BuildLayout(s2Layer, bcIdx);
-  s2Layer.style.opacity='0';
+  // opacity는 이미 createS2Layer에서 '0'으로 세팅됨
   s2AnimFn=(t)=>s2AnimLayout(s2Layer, bcIdx, t);
 }
 
